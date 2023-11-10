@@ -1,0 +1,62 @@
+---
+BasedOnStyle: Chromium
+ColumnLimit: '80'
+IndentWidth: '4'
+UseTab: Never
+
+# Avoids dealing with this:
+# void f() { foo(); }
+AllowShortFunctionsOnASingleLine: Empty
+
+# Add space between functions, classes, ect.
+SeparateDefinitionBlocks: Always
+
+# Avoiding arguments aligned with end of function
+# default:
+# someLongFunction(argument1,
+#                  argument2);
+#
+# BlockIndent:
+# someLongFunction(
+#     argument1, argument2
+# );
+AlignAfterOpenBracket: BlockIndent 
+
+# Avoiding multiple arguments on same line if too long
+# false:
+# void f() {
+#   f(a, a,
+#     a);
+# }
+# 
+# true:
+# void f() {
+#   f(a,
+#     a,
+#     a);
+# }
+BinPackArguments: false
+BinPackParameters: false
+
+# true:                                  false:
+# vector<int> x{1, 2, 3, 4};     vs.     vector<int> x{ 1, 2, 3, 4 };
+# vector<T> x{{}, {}, {}, {}};           vector<T> x{ {}, {}, {}, {} };
+# f(MyMap[{composite, key}]);            f(MyMap[{ composite, key }]);
+# new int[3]{1, 2, 3};                   new int[3]{ 1, 2, 3 };
+Cpp11BracedListStyle: false
+
+# Avoiding all arguments on newline as messes with arg name hinting
+# true:
+# callFunction(
+#     a, b, c, d);
+#
+# false:
+# callFunction(a,
+#              b,
+#              c,
+#              d);
+AllowAllArgumentsOnNextLine : false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllConstructorInitializersOnNextLine: false
+
+AlignArrayOfStructures: Right
