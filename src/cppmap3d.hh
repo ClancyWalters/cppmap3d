@@ -7,43 +7,35 @@ namespace cppmap3d {
 
 enum class Ellipsoid {
     /// WGS84: GPS Ellipsoid frame
-    /// semi-major axis: 6378137.0 [m]
-    /// flattening: 1.0/298.2572235630
     WGS84,
-    /// WGS72: semi-major axis: 6378135.0 [m]
-    /// flattening: 1.0/298.26
+
+    /// WGS72: GPS Ellipsoid frame
     WGS72,
-    /// WGS66: semi-major axis: 6378145.0 [m]
-    /// flattening: 1.0/298.25
+
+    /// WGS66: GPS Ellipsoid frame
     WGS66,
-    /// WGS60: semi-major axis: 6378165.0 [m]
-    /// flattening: 1.0/298.3
+
+    /// WGS60: GPS Ellipsoid frame
     WGS60,
+
     /// PZ90: Glonass Ellipsoid frame
-    /// semi-major axis: 6378136.0 [m]
-    /// flattening: 1/298.257839303
     PZ90,
+
     /// BDC, also known as CGCS2000,
     /// is the reference frame used by the
     /// Beidou constellation.
-    /// Semi-major axis: 6378137.0 [m]
-    /// flattening: 1/298.257222101
     BDC,
+
     /// GRS80 reference ellipsoid
-    /// semi-major axis: 6378137.0 [m]
-    /// flattening: 1.0/298.257222101
     GRS80,
+
     /// Bessel reference ellipsoid
-    /// semi-major axis: 6377397.155 [m]
-    /// flattening: 1.0/299.1528128
     Bessel,
+
     /// Airy reference ellipsoid
-    /// semi-major axis: 6377563.396 [m]
-    /// flattening: 1.0/299.3249646
     Airy,
+
     /// International reference ellipsoid
-    /// semi-major axis: 6378388.0 [m]
-    /// flattening: 1.0/297.0
     International,
 };
 

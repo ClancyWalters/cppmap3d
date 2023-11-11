@@ -23,6 +23,10 @@ TEST_CASE("geodetic2ecef") {
     CHECK(std::abs(x - xref) < 1e-3);
     CHECK(std::abs(y - yref) < 1e-3);
     CHECK(std::abs(z - zref) < 1e-3);
+
+    CHECK(x == doctest::Approx(xref));
+    CHECK(y == doctest::Approx(yref));
+    CHECK(z == doctest::Approx(zref));
 }
 
 TEST_CASE("geodetic2aer") {
@@ -44,6 +48,10 @@ TEST_CASE("geodetic2aer") {
     CHECK(std::abs(a - azref) < 1e-3);
     CHECK(std::abs(e - elref) < 1e-3);
     CHECK(std::abs(r - rangeref) < 1e-3);
+
+    CHECK(a == doctest::Approx(azref));
+    CHECK(e == doctest::Approx(elref));
+    CHECK(r == doctest::Approx(rangeref));
 }
 
 TEST_CASE("geodetic2enu") {
@@ -65,6 +73,10 @@ TEST_CASE("geodetic2enu") {
     CHECK(std::abs(e - eref) < 1e-3);
     CHECK(std::abs(n - nref) < 1e-3);
     CHECK(std::abs(u - uref) < 1e-3);
+
+    CHECK(e == doctest::Approx(eref));
+    CHECK(n == doctest::Approx(nref));
+    CHECK(u == doctest::Approx(uref));
 }
 
 TEST_CASE("aer2ecef") {
@@ -86,6 +98,10 @@ TEST_CASE("aer2ecef") {
     CHECK(std::abs(x - xref) < 1e-3);
     CHECK(std::abs(y - yref) < 1e-3);
     CHECK(std::abs(z - zref) < 1e-3);
+
+    CHECK(x == doctest::Approx(xref));
+    CHECK(y == doctest::Approx(yref));
+    CHECK(z == doctest::Approx(zref));
 }
 
 TEST_CASE("aer2enu") {
@@ -103,6 +119,10 @@ TEST_CASE("aer2enu") {
     CHECK(std::abs(e - eref) < 1e-3);
     CHECK(std::abs(n - nref) < 1e-3);
     CHECK(std::abs(u - uref) < 1e-3);
+
+    CHECK(e == doctest::Approx(eref));
+    CHECK(n == doctest::Approx(nref));
+    CHECK(u == doctest::Approx(uref));
 }
 
 TEST_CASE("aer2geodetic") {
@@ -124,6 +144,10 @@ TEST_CASE("aer2geodetic") {
     CHECK(std::abs(lat - latref) < 1e-8);
     CHECK(std::abs(lon - lonref) < 1e-8);
     CHECK(std::abs(alt - altref) < 1e-8);
+
+    CHECK(lat == doctest::Approx(latref));
+    CHECK(lon == doctest::Approx(lonref));
+    CHECK(alt == doctest::Approx(altref));
 }
 
 TEST_CASE("enu2aer") {
@@ -141,6 +165,10 @@ TEST_CASE("enu2aer") {
     CHECK(std::abs(az - azref) < 1e-3);
     CHECK(std::abs(el - elref) < 1e-3);
     CHECK(std::abs(range - rangeref) < 1e-3);
+
+    CHECK(az == doctest::Approx(azref));
+    CHECK(el == doctest::Approx(elref));
+    CHECK(range == doctest::Approx(rangeref));
 }
 
 TEST_CASE("enu2ecef") {
@@ -162,6 +190,10 @@ TEST_CASE("enu2ecef") {
     CHECK(std::abs(x - xref) < 1e-3);
     CHECK(std::abs(y - yref) < 1e-3);
     CHECK(std::abs(z - zref) < 1e-3);
+
+    CHECK(x == doctest::Approx(xref));
+    CHECK(y == doctest::Approx(yref));
+    CHECK(z == doctest::Approx(zref));
 }
 
 TEST_CASE("enu2geodetic") {
@@ -183,6 +215,10 @@ TEST_CASE("enu2geodetic") {
     CHECK(std::abs(lat - latref) < 1e-8);
     CHECK(std::abs(lon - lonref) < 1e-8);
     CHECK(std::abs(alt - altref) < 1e-8);
+
+    CHECK(lat == doctest::Approx(latref));
+    CHECK(lon == doctest::Approx(lonref));
+    CHECK(alt == doctest::Approx(altref));
 }
 
 TEST_CASE("ecef2geodetic") {
@@ -199,12 +235,20 @@ TEST_CASE("ecef2geodetic") {
     CHECK(std::abs(lon - lonref) < 1e-8);
     CHECK(std::abs(alt - altref) < 1e-8);
 
+    CHECK(lat == doctest::Approx(latref));
+    CHECK(lon == doctest::Approx(lonref));
+    CHECK(alt == doctest::Approx(altref));
+
     cppmap3d::geodetic2ecef(latref, lonref, altref - 5000.0, x, y, z);
     cppmap3d::ecef2geodetic(x, y, z, lat, lon, alt);
 
     CHECK(std::abs(lat - latref) < 1e-8);
     CHECK(std::abs(lon - lonref) < 1e-8);
     CHECK(std::abs(alt - (altref - 5000.0)) < 1e-8);
+
+    CHECK(lat == doctest::Approx(latref));
+    CHECK(lon == doctest::Approx(lonref));
+    CHECK(alt == doctest::Approx((altref - 5000.0)));
 }
 
 TEST_CASE("ecef2enu") {
@@ -223,6 +267,10 @@ TEST_CASE("ecef2enu") {
     CHECK(std::abs(e - eref) < 1e-3);
     CHECK(std::abs(n - nref) < 1e-3);
     CHECK(std::abs(u - uref) < 1e-3);
+
+    CHECK(e == doctest::Approx(eref));
+    CHECK(n == doctest::Approx(nref));
+    CHECK(u == doctest::Approx(uref));
 }
 
 TEST_CASE("ecef2aer") {
@@ -242,6 +290,10 @@ TEST_CASE("ecef2aer") {
     CHECK(std::abs(az - azref) < 1e-3);
     CHECK(std::abs(el - elref) < 1e-3);
     CHECK(std::abs(range - rangeref) < 1e-3);
+
+    CHECK(az == doctest::Approx(azref));
+    CHECK(el == doctest::Approx(elref));
+    CHECK(range == doctest::Approx(rangeref));
 }
 
 TEST_CASE("ned2geodetic") {
@@ -262,6 +314,10 @@ TEST_CASE("ned2geodetic") {
     CHECK(std::abs(lat - latref) < 1e-8);
     CHECK(std::abs(lon - lonref) < 1e-8);
     CHECK(std::abs(alt - altref) < 1e-8);
+
+    CHECK(lat == doctest::Approx(latref));
+    CHECK(lon == doctest::Approx(lonref));
+    CHECK(alt == doctest::Approx(altref));
 }
 
 TEST_CASE("geodetic2ned") {
@@ -282,6 +338,10 @@ TEST_CASE("geodetic2ned") {
     CHECK(std::abs(n - nref) < 1e-3);
     CHECK(std::abs(e - eref) < 1e-3);
     CHECK(std::abs(d - dref) < 1e-3);
+
+    CHECK(e == doctest::Approx(eref));
+    CHECK(n == doctest::Approx(nref));
+    CHECK(d == doctest::Approx(dref));
 }
 
 TEST_CASE("aer2ned") {
@@ -299,12 +359,16 @@ TEST_CASE("aer2ned") {
     CHECK(std::abs(n - nref) < 1e-3);
     CHECK(std::abs(e - eref) < 1e-3);
     CHECK(std::abs(d - dref) < 1e-3);
+
+    CHECK(e == doctest::Approx(eref));
+    CHECK(n == doctest::Approx(nref));
+    CHECK(d == doctest::Approx(dref));
 }
 
 TEST_CASE("ned2aer") {
-    double az_ref = 33.0 * (M_PI / 180);
-    double el_ref = 70.0 * (M_PI / 180);
-    double range_ref = 1000.0;
+    double azref = 33.0 * (M_PI / 180);
+    double elref = 70.0 * (M_PI / 180);
+    double rangeref = 1000.0;
 
     double e = 1.862775208165935e+02;
     double n = 2.868422278517140e+02;
@@ -313,9 +377,13 @@ TEST_CASE("ned2aer") {
     double az, el, range;
     cppmap3d::ned2aer(n, e, d, az, el, range);
 
-    CHECK(std::abs(az - az_ref) < 1e-6);
-    CHECK(std::abs(el - el_ref) < 1e-6);
-    CHECK(std::abs(range - range_ref) < 1e-3);
+    CHECK(std::abs(az - azref) < 1e-6);
+    CHECK(std::abs(el - elref) < 1e-6);
+    CHECK(std::abs(range - rangeref) < 1e-3);
+
+    CHECK(az == doctest::Approx(azref));
+    CHECK(el == doctest::Approx(elref));
+    CHECK(range == doctest::Approx(rangeref));
 }
 
 TEST_CASE("ned2ecef") {
@@ -336,6 +404,10 @@ TEST_CASE("ned2ecef") {
     CHECK(std::abs(x - xref) < 1e-3);
     CHECK(std::abs(y - yref) < 1e-3);
     CHECK(std::abs(z - zref) < 1e-3);
+
+    CHECK(x == doctest::Approx(xref));
+    CHECK(y == doctest::Approx(yref));
+    CHECK(z == doctest::Approx(zref));
 }
 
 TEST_CASE("ellipsoid_references") {
@@ -344,88 +416,126 @@ TEST_CASE("ellipsoid_references") {
     double f = cppmap3d::internal::getFlattening(ellipsoid);
     double b = cppmap3d::internal::getMinor(a, f);
     double e = cppmap3d::internal::getSquaredEccentricity(a, b);
+
     CHECK(std::abs(a - 6378137.0) < 1E-6);
     CHECK(std::abs(b - 6356752.314245) < 1E-6);
     CHECK(std::abs(1.0 / f - 298.257223563) < 1E-6);
     CHECK(std::abs(e - 6.6943799E-3) < 1E-6);
+    CHECK(a == doctest::Approx(6378137.0));
+    CHECK(b == doctest::Approx(6356752.314245));
+    CHECK(1.0 / f == doctest::Approx(298.257223563));
+    CHECK(e == doctest::Approx(6.6943799E-3));
 
     ellipsoid = cppmap3d::Ellipsoid::WGS72;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(a, f);
     e = cppmap3d::internal::getSquaredEccentricity(a, b);
+
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
+    CHECK(b == doctest::Approx(a * (1.0 - f)));
+    CHECK(e == doctest::Approx(f * (2.0 - f)));
 
     ellipsoid = cppmap3d::Ellipsoid::WGS66;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(a, f);
     e = cppmap3d::internal::getSquaredEccentricity(a, b);
+
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
+    CHECK(b == doctest::Approx(a * (1.0 - f)));
+    CHECK(e == doctest::Approx(f * (2.0 - f)));
 
     ellipsoid = cppmap3d::Ellipsoid::WGS60;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(a, f);
     e = cppmap3d::internal::getSquaredEccentricity(a, b);
+
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
+    CHECK(b == doctest::Approx(a * (1.0 - f)));
+    CHECK(e == doctest::Approx(f * (2.0 - f)));
 
     ellipsoid = cppmap3d::Ellipsoid::PZ90;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(a, f);
     e = cppmap3d::internal::getSquaredEccentricity(a, b);
+
     CHECK(std::abs(a - 6378136.0) < 1E-6);
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK(std::abs(1.0 / f - 298.257839303) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
+    CHECK(a == doctest::Approx(6378136.0));
+    CHECK(b == doctest::Approx(a * (1.0 - f)));
+    CHECK(1.0 / f == doctest::Approx(298.257839303));
+    CHECK(e == doctest::Approx(f * (2.0 - f)));
 
     ellipsoid = cppmap3d::Ellipsoid::GRS80;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(a, f);
     e = cppmap3d::internal::getSquaredEccentricity(a, b);
+
     CHECK(std::abs(a - 6378137.0) < 1E-6);
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK(std::abs(1.0 / f - 298.257222101) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
+    CHECK(a == doctest::Approx(6378137.0));
+    CHECK(b == doctest::Approx(a * (1.0 - f)));
+    CHECK(1.0 / f == doctest::Approx(298.257222101));
+    CHECK(e == doctest::Approx(f * (2.0 - f)));
 
     ellipsoid = cppmap3d::Ellipsoid::BDC;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(a, f);
     e = cppmap3d::internal::getSquaredEccentricity(a, b);
+
     CHECK(std::abs(a - 6378137.0) < 1E-6);
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK(std::abs(1.0 / f - 298.257222101) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
+    CHECK(a == doctest::Approx(6378137.0));
+    CHECK(b == doctest::Approx(a * (1.0 - f)));
+    CHECK(1.0 / f == doctest::Approx(298.257222101));
+    CHECK(e == doctest::Approx(f * (2.0 - f)));
 
     ellipsoid = cppmap3d::Ellipsoid::Bessel;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(a, f);
     e = cppmap3d::internal::getSquaredEccentricity(a, b);
+
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
+    CHECK(b == doctest::Approx(a * (1.0 - f)));
+    CHECK(e == doctest::Approx(f * (2.0 - f)));
 
     ellipsoid = cppmap3d::Ellipsoid::International;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(a, f);
     e = cppmap3d::internal::getSquaredEccentricity(a, b);
+
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
+    CHECK(b == doctest::Approx(a * (1.0 - f)));
+    CHECK(e == doctest::Approx(f * (2.0 - f)));
 
     ellipsoid = cppmap3d::Ellipsoid::Airy;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(a, f);
     e = cppmap3d::internal::getSquaredEccentricity(a, b);
+
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
+    CHECK(b == doctest::Approx(a * (1.0 - f)));
+    CHECK(e == doctest::Approx(f * (2.0 - f)));
 }
 
 TEST_CASE("ecef2ned") {
@@ -444,4 +554,8 @@ TEST_CASE("ecef2ned") {
     CHECK(std::abs(n - nref) < 1e-3);
     CHECK(std::abs(e - eref) < 1e-3);
     CHECK(std::abs(d - dref) < 1e-3);
+
+    CHECK(e == doctest::Approx(eref));
+    CHECK(n == doctest::Approx(nref));
+    CHECK(d == doctest::Approx(dref));
 }
