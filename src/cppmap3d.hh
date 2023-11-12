@@ -2,6 +2,7 @@
 #define CPPMAP3D_HEADER_GUARD
 
 #include <cmath>
+#include <stdexcept>
 
 namespace cppmap3d {
 
@@ -40,7 +41,7 @@ enum class Ellipsoid {
 };
 
 namespace internal {
-inline double getMajor(Ellipsoid ellipsoid) {
+inline constexpr double getMajor(Ellipsoid ellipsoid) {
     switch (ellipsoid) {
         case Ellipsoid::WGS84:
             return 6378137.0;
@@ -67,7 +68,7 @@ inline double getMajor(Ellipsoid ellipsoid) {
     }
 }
 
-inline double getFlattening(Ellipsoid ellipsoid) {
+inline constexpr double getFlattening(Ellipsoid ellipsoid) {
     switch (ellipsoid) {
         case Ellipsoid::WGS84:
             return 1.0 / 298.257223563;
@@ -94,11 +95,15 @@ inline double getFlattening(Ellipsoid ellipsoid) {
     }
 }
 
-inline double getMinor(double major, double flattening) {
+inline constexpr double getMinor(Ellipsoid ellipsoid) {
+    double major = getMajor(ellipsoid);
+    double flattening = getFlattening(ellipsoid);
     return major * (1.0 - flattening);
 }
 
-inline double getSquaredEccentricity(double major, double minor) {
+inline constexpr double getSquaredEccentricity(Ellipsoid ellipsoid) {
+    double major = getMajor(ellipsoid);
+    double minor = getMinor(ellipsoid);
     return ((major * major) - (minor * minor)) / (major * major);
 }
 
@@ -112,7 +117,7 @@ inline void enu2uvw(
     double& out_v,
     double& out_w
 ) {
-    auto t = std::cos(lat) * up - std::sin(lat) * nt;
+    double t = std::cos(lat) * up - std::sin(lat) * nt;
     out_u = std::cos(lon) * t - std::sin(lon) * et;
     out_v = std::sin(lon) * t + std::cos(lon) * et;
     out_w = std::sin(lat) * up + std::cos(lat) * nt;
@@ -128,15 +133,13 @@ inline void uvw2enu(
     double& out_north,
     double& out_up
 ) {
-    auto t = std::cos(lon) * u + std::sin(lon) * v;
+    double t = std::cos(lon) * u + std::sin(lon) * v;
     out_east = -1 * std::sin(lon) * u + std::cos(lon) * v;
     out_north = -1 * std::sin(lat) * t + std::cos(lat) * w;
     out_up = std::cos(lat) * t + std::sin(lat) * w;
 }
 
-}  // namespace internal
-
-inline void ecef2geodetic(
+inline void ecef2geodetic_you(
     double x,
     double y,
     double z,
@@ -147,7 +150,7 @@ inline void ecef2geodetic(
 ) {
     double major = internal::getMajor(ellipsoid);
     double flattening = internal::getFlattening(ellipsoid);
-    double minor = internal::getMinor(major, flattening);
+    double minor = internal::getMinor(ellipsoid);
 
     double r = std::sqrt(x * x + y * y + z * z);
     double e = std::sqrt(major * major - minor * minor);
@@ -157,7 +160,19 @@ inline void ecef2geodetic(
 
     double q = std::sqrt(x * x + y * y);
     double hu_e = std::sqrt(u * u + e * e);
+
+    // it's possible for this to be nan since u
     double beta = std::atan(hu_e / u * z / q);
+
+    if (std::isnan(beta)) {
+        if (std::abs(z) < 1.0e-9) {
+            beta = 0;
+        } else if (z > 0) {
+            beta = 3.14159265358979311599796346854 / 2;
+        } else {
+            beta = -3.14159265358979311599796346854 / 2;
+        }
+    }
 
     double eps = ((minor * u - major * hu_e + e * e) * std::sin(beta)) /
                  (major * hu_e / std::cos(beta) - e * e * std::cos(beta));
@@ -179,6 +194,97 @@ inline void ecef2geodetic(
     }
 }
 
+inline void ecef2geodetic_olson(
+    double x,
+    double y,
+    double z,
+    double& out_lat,
+    double& out_lon,
+    double& out_alt,
+    Ellipsoid ellipsoid = Ellipsoid::WGS84
+) {
+    double zp, w2, w, z2, r2, r, s2, c2, s, c, ss;
+    double g, rg, rf, u, v, m, f, p;
+    double a = internal::getMajor(ellipsoid);
+    double e2 = internal::getSquaredEccentricity(ellipsoid);
+    double a1 = a * e2;
+    double a2 = a1 * a1;
+    double a3 = a1 * e2 / 2.0;
+    double a4 = (5.0 / 2.0) * a2;
+    double a5 = a1 + a3;
+    double a6 = 1 - e2;
+
+    zp = std::fabs(z);
+    w2 = x * x + y * y;
+    w = std::sqrt(w2);
+    z2 = z * z;
+    r2 = w2 + z2;
+    r = std::sqrt(r2);
+    if (r < 100000.) {
+        out_lat = 0.;
+        out_lon = 0.;
+        out_alt = -1.e7;
+        throw std::domain_error(
+            "Cannot calculate geodetic of ecef close to center of earth"
+        );
+    }
+    out_lon = std::atan2(y, x);
+    s2 = z2 / r2;
+    c2 = w2 / r2;
+    u = a2 / r;
+    v = a3 - a4 / r;
+    if (c2 > .3) {
+        s = (zp / r) * (1. + c2 * (a1 + u + s2 * v) / r);
+        out_lat = std::asin(s);
+        ss = s * s;
+        c = std::sqrt(1. - ss);
+    } else {
+        c = (w / r) * (1. - s2 * (a5 - u - c2 * v) / r);
+        out_lat = std::acos(c);
+        ss = 1. - c * c;
+        s = std::sqrt(ss);
+    }
+    g = 1. - e2 * ss;
+    rg = a / std::sqrt(g);
+    rf = a6 * rg;
+    u = w - rg * c;
+    v = zp - rf * s;
+    f = c * u + s * v;
+    m = c * v - s * u;
+    p = m / (rf / g + f);
+    out_lat = out_lat + p;
+    out_alt = f + m * p / 2.;
+    if (z < 0.)
+        out_lat = -out_lat;
+}
+
+}  // namespace internal
+
+inline void ecef2geodetic(
+    double x,
+    double y,
+    double z,
+    double& out_lat,
+    double& out_lon,
+    double& out_alt,
+    Ellipsoid ellipsoid = Ellipsoid::WGS84
+) {
+#ifndef CPPMAP3D_ECEF2GEODETIC_OLSON
+    internal::ecef2geodetic_you(x, y, z, out_lat, out_lon, out_alt, ellipsoid);
+#endif
+#ifdef CPPMAP3D_ECEF2GEODETIC_OLSON
+    internal::ecef2geodetic_olson(
+        x,
+        y,
+        z,
+        out_lat,
+        out_lon,
+        out_alt,
+        ellipsoid
+    );
+#endif
+}
+
 inline void aer2enu(
     double az,
     double el,
@@ -187,6 +293,10 @@ inline void aer2enu(
     double& out_n,
     double& out_u
 ) {
+    if (range < 0) {
+        throw std::domain_error("range should not be negative");
+    }
+
     auto r = range * std::cos(el);
     out_e = r * std::sin(az);
     out_n = r * std::cos(az);
@@ -201,8 +311,20 @@ inline void enu2aer(
     double& out_el,
     double& out_range
 ) {
-    double r = std::sqrt(east * east + north * north);
-    out_range = std::sqrt(r * r + up * up);
+    // 1 millimeter precision for singularity stability - see pymap3d PR#42
+    if (std::abs(east) < 1.0e-3) {
+        east = 0;
+    }
+    if (std::abs(north) < 1.0e-3) {
+        north = 0;
+    }
+    if (std::abs(up) < 1.0e-3) {
+        up = 0;
+    }
+
+    double r = std::hypot(east, north);
+
+    out_range = std::hypot(r, up);
     out_el = std::atan2(up, r);
     const auto pi = (2 * 3.14159265358979311599796346854);
 
@@ -232,8 +354,8 @@ inline void geodetic2ecef(
 ) {
     double major = internal::getMajor(ellipsoid);
     double flattening = internal::getFlattening(ellipsoid);
-    double minor = internal::getMinor(major, flattening);
-    double se = internal::getSquaredEccentricity(major, minor);
+    double minor = internal::getMinor(ellipsoid);
+    double se = internal::getSquaredEccentricity(ellipsoid);
 
     double n = major / (std::sqrt(1.0 - se * std::sin(lat) * std::sin(lat)));
 

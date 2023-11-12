@@ -8,10 +8,6 @@ option( SANITIZE "Enable selected sanitizer in build" OFF )
 
 project( "cppmap3d" )
 
-find_package( doctest REQUIRED )
-
-enable_testing()
-
 add_subdirectory( src )
 
 # Copy compile commands for clangd

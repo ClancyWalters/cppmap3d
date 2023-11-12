@@ -1,4 +1,14 @@
-add_executable( cppmap3d_tests "main.cpp" "../cppmap3d.hh" "cppmap3d_tests.cpp" )
+find_package( doctest REQUIRED )
+enable_testing()
+
+add_executable( cppmap3d_tests "main.cpp"
+    "../cppmap3d.hh"
+
+    "cppmap3d_tests.cpp"
+    "cppmap3d_aer.cpp"
+    "cppmap3d_enu.cpp"
+    "cppmap3d_geodetic.cpp"
+)
 
 target_link_libraries(
     cppmap3d_tests

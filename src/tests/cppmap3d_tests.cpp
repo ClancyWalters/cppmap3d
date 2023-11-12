@@ -1,3 +1,5 @@
+// Tests ported from https://github.com/gberrante/map_3d
+
 #include "doctest/doctest.h"
 
 #define _USE_MATH_DEFINES
@@ -7,10 +9,11 @@
 #endif
 
 #include "../cppmap3d.hh"
+#include "cppmap3d_test_util.hh"
 
 TEST_CASE("geodetic2ecef") {
-    double lat = 30.14988205 * (M_PI / 180);
-    double lon = 91.38733072 * (M_PI / 180);
+    double lat = radians(30.14988205);
+    double lon = radians(91.38733072);
     double alt = 4031.0;
 
     double x, y, z;
@@ -30,16 +33,16 @@ TEST_CASE("geodetic2ecef") {
 }
 
 TEST_CASE("geodetic2aer") {
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
 
-    double lat = 42.002581974253744 * (M_PI / 180);
-    double lon = -81.997751960067460 * (M_PI / 180);
+    double lat = radians(42.002581974253744);
+    double lon = radians(-81.997751960067460);
     double alt = 1.139701799575106e+03;
 
-    double azref = 32.999999999989740 * (M_PI / 180);
-    double elref = 69.999999999945540 * (M_PI / 180);
+    double azref = radians(32.999999999989740);
+    double elref = radians(69.999999999945540);
     double rangeref = 1000.0;
 
     double a, e, r;
@@ -55,12 +58,12 @@ TEST_CASE("geodetic2aer") {
 }
 
 TEST_CASE("geodetic2enu") {
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
 
-    double lat = 42.002581974253744 * (M_PI / 180);
-    double lon = -81.997751960067460 * (M_PI / 180);
+    double lat = radians(42.002581974253744);
+    double lon = radians(-81.997751960067460);
     double alt = 1.139701799575106e+03;
 
     double eref = 1.862775208168244e+02;
@@ -80,12 +83,12 @@ TEST_CASE("geodetic2enu") {
 }
 
 TEST_CASE("aer2ecef") {
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
 
-    double az = 33 * (M_PI / 180);
-    double el = 70 * (M_PI / 180);
+    double az = radians(33);
+    double el = radians(70);
     double range = 1000.0;
 
     double x, y, z;
@@ -105,8 +108,8 @@ TEST_CASE("aer2ecef") {
 }
 
 TEST_CASE("aer2enu") {
-    double az = 33 * (M_PI / 180);
-    double el = 70 * (M_PI / 180);
+    double az = radians(33);
+    double el = radians(70);
     double range = 1000.0;
 
     double eref = 1.862775208165935e+02;
@@ -126,16 +129,16 @@ TEST_CASE("aer2enu") {
 }
 
 TEST_CASE("aer2geodetic") {
-    double lat0 = 42 * (M_PI / 180);
-    double lon0 = -82 * (M_PI / 180);
+    double lat0 = radians(42);
+    double lon0 = radians(-82);
     double alt0 = 200.0;
 
-    double az = 32.999999999989740 * (M_PI / 180);
-    double el = 69.999999999945540 * (M_PI / 180);
+    double az = radians(32.999999999989740);
+    double el = radians(69.999999999945540);
     double range = 1000.0;
 
-    double latref = 42.002581974253744 * (M_PI / 180);
-    double lonref = -81.997751960067460 * (M_PI / 180);
+    double latref = radians(42.002581974253744);
+    double lonref = radians(-81.997751960067460);
     double altref = 1.139701799575106e+03;
 
     double lat, lon, alt;
@@ -155,8 +158,8 @@ TEST_CASE("enu2aer") {
     double n = 2.868422200000000e+02;
     double u = 9.396926200000000e+02;
 
-    double azref = 33.0 * (M_PI / 180);
-    double elref = 70.0 * (M_PI / 180);
+    double azref = radians(33.0);
+    double elref = radians(70.0);
     double rangeref = 1000.0;
 
     double az, el, range;
@@ -172,8 +175,8 @@ TEST_CASE("enu2aer") {
 }
 
 TEST_CASE("enu2ecef") {
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
 
     double e = 1.862775210000000e+02;
@@ -197,16 +200,16 @@ TEST_CASE("enu2ecef") {
 }
 
 TEST_CASE("enu2geodetic") {
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
 
     double e = 0.0;
     double n = 0.0;
     double u = -1.0;
 
-    double latref = 41.999999999999993 * (M_PI / 180);
-    double lonref = -82.0 * (M_PI / 180);
+    double latref = radians(41.999999999999993);
+    double lonref = radians(-82.0);
     double altref = 1.990000000007368e+02;
 
     double lat, lon, alt;
@@ -222,8 +225,8 @@ TEST_CASE("enu2geodetic") {
 }
 
 TEST_CASE("ecef2geodetic") {
-    double latref = 30.14988205 * (M_PI / 180);
-    double lonref = 91.38733072 * (M_PI / 180);
+    double latref = radians(30.14988205);
+    double lonref = radians(91.38733072);
     double altref = 4031.0;
 
     double x, y, z;
@@ -252,8 +255,8 @@ TEST_CASE("ecef2geodetic") {
 }
 
 TEST_CASE("ecef2enu") {
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
     double eref = 1.862775210000000e+02;
     double nref = 2.868422200000000e+02;
@@ -274,12 +277,12 @@ TEST_CASE("ecef2enu") {
 }
 
 TEST_CASE("ecef2aer") {
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
 
-    double azref = 33.0 * (M_PI / 180);
-    double elref = 70.0 * (M_PI / 180);
+    double azref = radians(33.0);
+    double elref = radians(70.0);
     double rangeref = 1000.0;
 
     double x, y, z;
@@ -297,15 +300,15 @@ TEST_CASE("ecef2aer") {
 }
 
 TEST_CASE("ned2geodetic") {
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
     double e = 0.0;
     double n = 0.0;
     double d = 1.0;
 
-    double latref = 41.999999999999993 * (M_PI / 180);
-    double lonref = -82.0 * (M_PI / 180);
+    double latref = radians(41.999999999999993);
+    double lonref = radians(-82.0);
     double altref = 1.990000000007368e+02;
 
     double lat, lon, alt;
@@ -321,11 +324,11 @@ TEST_CASE("ned2geodetic") {
 }
 
 TEST_CASE("geodetic2ned") {
-    double lat = 41.999999999999993 * (M_PI / 180);
-    double lon = -82.0 * (M_PI / 180);
+    double lat = radians(41.999999999999993);
+    double lon = radians(-82.0);
     double alt = 1.990000000007368e+02;
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
 
     double eref = 0.0;
@@ -345,8 +348,8 @@ TEST_CASE("geodetic2ned") {
 }
 
 TEST_CASE("aer2ned") {
-    double az = 33.0 * (M_PI / 180);
-    double el = 70.0 * (M_PI / 180);
+    double az = radians(33.0);
+    double el = radians(70.0);
     double range = 1000.0;
 
     double eref = 1.862775208165935e+02;
@@ -366,8 +369,8 @@ TEST_CASE("aer2ned") {
 }
 
 TEST_CASE("ned2aer") {
-    double azref = 33.0 * (M_PI / 180);
-    double elref = 70.0 * (M_PI / 180);
+    double azref = radians(33.0);
+    double elref = radians(70.0);
     double rangeref = 1000.0;
 
     double e = 1.862775208165935e+02;
@@ -387,8 +390,8 @@ TEST_CASE("ned2aer") {
 }
 
 TEST_CASE("ned2ecef") {
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
     double e = 1.862775210000000e+02;
     double n = 2.868422200000000e+02;
@@ -414,8 +417,8 @@ TEST_CASE("ellipsoid_references") {
     cppmap3d::Ellipsoid ellipsoid = cppmap3d::Ellipsoid::WGS84;
     double a = cppmap3d::internal::getMajor(ellipsoid);
     double f = cppmap3d::internal::getFlattening(ellipsoid);
-    double b = cppmap3d::internal::getMinor(a, f);
-    double e = cppmap3d::internal::getSquaredEccentricity(a, b);
+    double b = cppmap3d::internal::getMinor(ellipsoid);
+    double e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
 
     CHECK(std::abs(a - 6378137.0) < 1E-6);
     CHECK(std::abs(b - 6356752.314245) < 1E-6);
@@ -429,8 +432,8 @@ TEST_CASE("ellipsoid_references") {
     ellipsoid = cppmap3d::Ellipsoid::WGS72;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(a, f);
-    e = cppmap3d::internal::getSquaredEccentricity(a, b);
+    b = cppmap3d::internal::getMinor(ellipsoid);
+    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
 
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
@@ -440,8 +443,8 @@ TEST_CASE("ellipsoid_references") {
     ellipsoid = cppmap3d::Ellipsoid::WGS66;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(a, f);
-    e = cppmap3d::internal::getSquaredEccentricity(a, b);
+    b = cppmap3d::internal::getMinor(ellipsoid);
+    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
 
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
@@ -451,8 +454,8 @@ TEST_CASE("ellipsoid_references") {
     ellipsoid = cppmap3d::Ellipsoid::WGS60;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(a, f);
-    e = cppmap3d::internal::getSquaredEccentricity(a, b);
+    b = cppmap3d::internal::getMinor(ellipsoid);
+    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
 
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
@@ -462,8 +465,8 @@ TEST_CASE("ellipsoid_references") {
     ellipsoid = cppmap3d::Ellipsoid::PZ90;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(a, f);
-    e = cppmap3d::internal::getSquaredEccentricity(a, b);
+    b = cppmap3d::internal::getMinor(ellipsoid);
+    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
 
     CHECK(std::abs(a - 6378136.0) < 1E-6);
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
@@ -477,8 +480,8 @@ TEST_CASE("ellipsoid_references") {
     ellipsoid = cppmap3d::Ellipsoid::GRS80;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(a, f);
-    e = cppmap3d::internal::getSquaredEccentricity(a, b);
+    b = cppmap3d::internal::getMinor(ellipsoid);
+    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
 
     CHECK(std::abs(a - 6378137.0) < 1E-6);
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
@@ -492,8 +495,8 @@ TEST_CASE("ellipsoid_references") {
     ellipsoid = cppmap3d::Ellipsoid::BDC;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(a, f);
-    e = cppmap3d::internal::getSquaredEccentricity(a, b);
+    b = cppmap3d::internal::getMinor(ellipsoid);
+    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
 
     CHECK(std::abs(a - 6378137.0) < 1E-6);
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
@@ -507,8 +510,8 @@ TEST_CASE("ellipsoid_references") {
     ellipsoid = cppmap3d::Ellipsoid::Bessel;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(a, f);
-    e = cppmap3d::internal::getSquaredEccentricity(a, b);
+    b = cppmap3d::internal::getMinor(ellipsoid);
+    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
 
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
@@ -518,8 +521,8 @@ TEST_CASE("ellipsoid_references") {
     ellipsoid = cppmap3d::Ellipsoid::International;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(a, f);
-    e = cppmap3d::internal::getSquaredEccentricity(a, b);
+    b = cppmap3d::internal::getMinor(ellipsoid);
+    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
 
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
@@ -529,8 +532,8 @@ TEST_CASE("ellipsoid_references") {
     ellipsoid = cppmap3d::Ellipsoid::Airy;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(a, f);
-    e = cppmap3d::internal::getSquaredEccentricity(a, b);
+    b = cppmap3d::internal::getMinor(ellipsoid);
+    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
 
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
@@ -539,8 +542,8 @@ TEST_CASE("ellipsoid_references") {
 }
 
 TEST_CASE("ecef2ned") {
-    double lat0 = 42.0 * (M_PI / 180);
-    double lon0 = -82.0 * (M_PI / 180);
+    double lat0 = radians(42.0);
+    double lon0 = radians(-82.0);
     double alt0 = 200.0;
     double eref = 1.862775210000000e+02;
     double nref = 2.868422200000000e+02;
