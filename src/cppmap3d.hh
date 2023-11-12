@@ -4,8 +4,15 @@
 #include <cmath>
 #include <stdexcept>
 
+/**
+ * C++ 3D geographic coordinate conversions
+ */
 namespace cppmap3d {
 
+/**
+ * Ellipsoids used to approximate the shape of the earth.
+ * Default is WGS84
+ */
 enum class Ellipsoid {
     Maupertuis,
     Plessis,
