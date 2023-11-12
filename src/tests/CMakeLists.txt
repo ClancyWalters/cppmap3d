@@ -12,6 +12,8 @@ add_executable( cppmap3d_tests "main.cpp"
     "cppmap3d_ned.cpp"
 )
 
+set_property( TARGET cppmap3d_tests PROPERTY CXX_STANDARD 11 )
+
 target_link_libraries(
     cppmap3d_tests
     PRIVATE
