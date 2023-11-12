@@ -270,7 +270,6 @@ inline void ecef2geodetic_you(
     Ellipsoid ellipsoid = Ellipsoid::WGS84
 ) {
     double major = internal::getMajor(ellipsoid);
-    double flattening = internal::getFlattening(ellipsoid);
     double minor = internal::getMinor(ellipsoid);
 
     double r = std::sqrt(x * x + y * y + z * z);

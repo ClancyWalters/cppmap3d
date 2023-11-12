@@ -22,4 +22,6 @@ Indices and tables
 Docs
 ====
 
-.. doxygennamespace:: cppmap3d
+.. doxygenfile:: cppmap3d.hh
+   :project: nutshell
+   :namespace: cppmap3d

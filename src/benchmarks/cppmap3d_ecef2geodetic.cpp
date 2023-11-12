@@ -7,7 +7,6 @@ TEST_CASE("ecef2geodetic_benchmark") {
 
     const auto ELL = cppmap3d::Ellipsoid::WGS84;
     const auto A = cppmap3d::internal::getMajor(ELL);
-    const auto F = cppmap3d::internal::getFlattening(ELL);
     const auto B = cppmap3d::internal::getMinor(ELL);
     // clang-format off
     const std::vector<std::vector<std::vector<double>>> data_container {

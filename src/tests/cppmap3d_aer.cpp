@@ -52,7 +52,6 @@ TEST_CASE("aer2ecef") {
 TEST_CASE("ecef2aer") {
     const auto ELL = cppmap3d::Ellipsoid::WGS84;
     const auto A = cppmap3d::internal::getMajor(ELL);
-    const auto F = cppmap3d::internal::getFlattening(ELL);
     const auto B = cppmap3d::internal::getMinor(ELL);
     // clang-format off
     std::vector<std::vector<std::vector<double>>> data_container {
