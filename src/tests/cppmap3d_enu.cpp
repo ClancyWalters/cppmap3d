@@ -5,7 +5,7 @@
 #include "../cppmap3d.hh"
 #include "cppmap3d_test_util.hh"
 
-TEST_CASE("ecef2enu") {
+TEST_CASE("enu_ecef") {
     const auto ELL = cppmap3d::Ellipsoid::WGS84;
     const auto A = cppmap3d::internal::getMajor(ELL);
 

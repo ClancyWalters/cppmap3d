@@ -10,7 +10,10 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+#include <tuple>
 #include <vector>
+
+#include "../cppmap3d.hh"
 
 inline double radians(double degrees) {
     return degrees * (M_PI / 180.0);
@@ -22,27 +25,72 @@ inline double degrees(double radians) {
 
 // Providing a hint to doctest to allow proper printing of input values
 namespace doctest {
-template <>
-struct StringMaker<std::vector<std::vector<double>>> {
-    static String convert(const std::vector<std::vector<double>>& arguments) {
+template <typename T>
+struct StringMaker<std::vector<T>> {
+    static String convert(const std::vector<T>& arguments) {
         doctest::String out = "{";
-        for (const auto& argument_group : arguments) {
-            out += "{";
-            for (const auto& argument : argument_group) {
-                out += doctest::toString(argument);
-                if (&argument != &argument_group.back()) {
-                    out += ", ";
-                }
-            }
-            out += "}";
-            if (&argument_group != &arguments.back()) {
+
+        for (const T& argument : arguments) {
+            out += doctest::toString(argument);
+            if (&argument != &arguments.back()) {
                 out += ", ";
             }
         }
+
         out += "}";
         return out;
     }
 };
+
+template <>
+struct StringMaker<std::vector<double>> {
+    static String convert(const std::vector<double>& arguments) {
+        doctest::String out = "{";
+
+        for (const auto& argument : arguments) {
+            out += doctest::toString(argument);
+            if (&argument != &arguments.back()) {
+                out += ", ";
+            }
+        }
+
+        out += "}";
+        return out;
+    }
+};
+
+template <>
+struct StringMaker<std::tuple<cppmap3d::Ellipsoid, double>> {
+    static String convert(
+        const std::tuple<cppmap3d::Ellipsoid, double>& argument
+    ) {
+        doctest::String out = "{";
+
+        out += doctest::toString(std::get<cppmap3d::Ellipsoid>(argument));
+        out += ", ";
+        out += doctest::toString(std::get<double>(argument));
+
+        out += "}";
+        return out;
+    }
+};
+
+template <>
+struct StringMaker<std::tuple<cppmap3d::Ellipsoid, std::vector<double>>> {
+    static String convert(
+        const std::tuple<cppmap3d::Ellipsoid, std::vector<double>>& argument
+    ) {
+        doctest::String out = "{";
+
+        out += doctest::toString(std::get<cppmap3d::Ellipsoid>(argument));
+        out += ", ";
+        out += doctest::toString(std::get<std::vector<double>>(argument));
+
+        out += "}";
+        return out;
+    }
+};
+
 }  // namespace doctest
 
 #endif

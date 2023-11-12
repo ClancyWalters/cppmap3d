@@ -7,98 +7,212 @@
 namespace cppmap3d {
 
 enum class Ellipsoid {
-    /// WGS84: GPS Ellipsoid frame
-    WGS84,
-
-    /// WGS72: GPS Ellipsoid frame
-    WGS72,
-
-    /// WGS66: GPS Ellipsoid frame
-    WGS66,
-
-    /// WGS60: GPS Ellipsoid frame
-    WGS60,
-
-    /// PZ90: Glonass Ellipsoid frame
-    PZ90,
-
-    /// BDC, also known as CGCS2000,
-    /// is the reference frame used by the
-    /// Beidou constellation.
-    BDC,
-
-    /// GRS80 reference ellipsoid
-    GRS80,
-
-    /// Bessel reference ellipsoid
-    Bessel,
-
-    /// Airy reference ellipsoid
+    Maupertuis,
+    Plessis,
+    Everest1830,
+    Everest1830Modified,
+    Everest1967,
     Airy,
-
-    /// International reference ellipsoid
-    International,
+    Bessel,
+    Clarke1866,
+    Clarke1878,
+    Clarke1860,
+    Helmert,
+    Hayford,
+    International1924,
+    Krassovsky1940,
+    WGS66,
+    Australian,
+    International1967,
+    GRS67,
+    SA1969,
+    WGS72,
+    GRS80,
+    WGS84,
+    WGS84Mean,
+    IERS1989,
+    PZ9011,
+    IERS2003,
+    GSK2011,
+    Mercury,
+    Venus,
+    Moon,
+    Mars,
+    Jupyter,
+    Io,
+    Saturn,
+    Uranus,
+    Neptune,
+    Pluto
 };
 
 namespace internal {
 inline constexpr double getMajor(Ellipsoid ellipsoid) {
     switch (ellipsoid) {
-        case Ellipsoid::WGS84:
-            return 6378137.0;
-        case Ellipsoid::WGS72:
-            return 6378135.0;
-        case Ellipsoid::WGS66:
-            return 6378145.0;
-        case Ellipsoid::WGS60:
-            return 6378165.0;
-        case Ellipsoid::PZ90:
-            return 6378136.0;
-        case Ellipsoid::BDC:
-            return 6378137.0;
-        case Ellipsoid::GRS80:
-            return 6378137.0;
-        case Ellipsoid::Bessel:
-            return 6377397.155;
-        case Ellipsoid::Airy:
+        case cppmap3d::Ellipsoid::Maupertuis:
+            return 6397300.0;
+        case cppmap3d::Ellipsoid::Plessis:
+            return 6376523.0;
+        case cppmap3d::Ellipsoid::Everest1830:
+            return 6377299.365;
+        case cppmap3d::Ellipsoid::Everest1830Modified:
+            return 6377304.063;
+        case cppmap3d::Ellipsoid::Everest1967:
+            return 6377298.556;
+        case cppmap3d::Ellipsoid::Airy:
             return 6377563.396;
-        case Ellipsoid::International:
+        case cppmap3d::Ellipsoid::Bessel:
+            return 6377397.155;
+        case cppmap3d::Ellipsoid::Clarke1866:
+            return 6378206.4;
+        case cppmap3d::Ellipsoid::Clarke1878:
+            return 6378190.0;
+        case cppmap3d::Ellipsoid::Clarke1860:
+            return 6378249.145;
+        case cppmap3d::Ellipsoid::Helmert:
+            return 6378200.0;
+        case cppmap3d::Ellipsoid::Hayford:
             return 6378388.0;
+        case cppmap3d::Ellipsoid::International1924:
+            return 6378388.0;
+        case cppmap3d::Ellipsoid::Krassovsky1940:
+            return 6378245.0;
+        case cppmap3d::Ellipsoid::WGS66:
+            return 6378145.0;
+        case cppmap3d::Ellipsoid::Australian:
+            return 6378160.0;
+        case cppmap3d::Ellipsoid::International1967:
+            return 6378157.5;
+        case cppmap3d::Ellipsoid::GRS67:
+            return 6378160.0;
+        case cppmap3d::Ellipsoid::SA1969:
+            return 6378160.0;
+        case cppmap3d::Ellipsoid::WGS72:
+            return 6378135.0;
+        case cppmap3d::Ellipsoid::GRS80:
+            return 6378137.0;
+        case cppmap3d::Ellipsoid::WGS84:
+            return 6378137.0;
+        case cppmap3d::Ellipsoid::WGS84Mean:
+            return 6371008.7714;
+        case cppmap3d::Ellipsoid::IERS1989:
+            return 6378136.0;
+        case cppmap3d::Ellipsoid::PZ9011:
+            return 6378136.0;
+        case cppmap3d::Ellipsoid::IERS2003:
+            return 6378136.6;
+        case cppmap3d::Ellipsoid::GSK2011:
+            return 6378136.5;
+        case cppmap3d::Ellipsoid::Mercury:
+            return 2440500.0;
+        case cppmap3d::Ellipsoid::Venus:
+            return 6051800.0;
+        case cppmap3d::Ellipsoid::Moon:
+            return 1738100.0;
+        case cppmap3d::Ellipsoid::Mars:
+            return 3396900.0;
+        case cppmap3d::Ellipsoid::Jupyter:
+            return 71492000.0;
+        case cppmap3d::Ellipsoid::Io:
+            return 1829.7;
+        case cppmap3d::Ellipsoid::Saturn:
+            return 60268000.0;
+        case cppmap3d::Ellipsoid::Uranus:
+            return 25559000.0;
+        case cppmap3d::Ellipsoid::Neptune:
+            return 24764000.0;
+        case cppmap3d::Ellipsoid::Pluto:
+            return 1188000.0;
         default:
-            return 6378137.0;  // unreachable
-    }
-}
-
-inline constexpr double getFlattening(Ellipsoid ellipsoid) {
-    switch (ellipsoid) {
-        case Ellipsoid::WGS84:
-            return 1.0 / 298.257223563;
-        case Ellipsoid::WGS72:
-            return 1.0 / 298.26;
-        case Ellipsoid::WGS66:
-            return 1.0 / 298.25;
-        case Ellipsoid::WGS60:
-            return 1.0 / 298.3;
-        case Ellipsoid::PZ90:
-            return 1.0 / 298.257839303;
-        case Ellipsoid::BDC:
-            return 1.0 / 298.257222101;
-        case Ellipsoid::GRS80:
-            return 1.0 / 298.2572221009;
-        case Ellipsoid::Bessel:
-            return 299.1528128;
-        case Ellipsoid::Airy:
-            return 299.3249646;
-        case Ellipsoid::International:
-            return 297.0;
-        default:
-            return 1.0 / 298.257223563;  // unreachable
+            return getMajor(cppmap3d::Ellipsoid::WGS84);
     }
 }
 
 inline constexpr double getMinor(Ellipsoid ellipsoid) {
+    switch (ellipsoid) {
+        case cppmap3d::Ellipsoid::Maupertuis:
+            return 6363806.283;
+        case cppmap3d::Ellipsoid::Plessis:
+            return 6355862.9333;
+        case cppmap3d::Ellipsoid::Everest1830:
+            return 6356098.359;
+        case cppmap3d::Ellipsoid::Everest1830Modified:
+            return 6356103.039;
+        case cppmap3d::Ellipsoid::Everest1967:
+            return 6356097.55;
+        case cppmap3d::Ellipsoid::Airy:
+            return 6356256.909;
+        case cppmap3d::Ellipsoid::Bessel:
+            return 6356078.963;
+        case cppmap3d::Ellipsoid::Clarke1866:
+            return 6356583.8;
+        case cppmap3d::Ellipsoid::Clarke1878:
+            return 6356456.0;
+        case cppmap3d::Ellipsoid::Clarke1860:
+            return 6356514.87;
+        case cppmap3d::Ellipsoid::Helmert:
+            return 6356818.17;
+        case cppmap3d::Ellipsoid::Hayford:
+            return 6356911.946;
+        case cppmap3d::Ellipsoid::International1924:
+            return 6356911.946;
+        case cppmap3d::Ellipsoid::Krassovsky1940:
+            return 6356863.019;
+        case cppmap3d::Ellipsoid::WGS66:
+            return 6356759.769;
+        case cppmap3d::Ellipsoid::Australian:
+            return 6356774.719;
+        case cppmap3d::Ellipsoid::International1967:
+            return 6356772.2;
+        case cppmap3d::Ellipsoid::GRS67:
+            return 6356774.516;
+        case cppmap3d::Ellipsoid::SA1969:
+            return 6356774.719;
+        case cppmap3d::Ellipsoid::WGS72:
+            return 6356750.52001609;
+        case cppmap3d::Ellipsoid::GRS80:
+            return 6356752.31414036;
+        case cppmap3d::Ellipsoid::WGS84:
+            return 6356752.31424518;
+        case cppmap3d::Ellipsoid::WGS84Mean:
+            return 6371008.7714;
+        case cppmap3d::Ellipsoid::IERS1989:
+            return 6356751.302;
+        case cppmap3d::Ellipsoid::PZ9011:
+            return 6356751.3618;
+        case cppmap3d::Ellipsoid::IERS2003:
+            return 6356751.9;
+        case cppmap3d::Ellipsoid::GSK2011:
+            return 6356751.758;
+        case cppmap3d::Ellipsoid::Mercury:
+            return 2438300.0;
+        case cppmap3d::Ellipsoid::Venus:
+            return 6051800.0;
+        case cppmap3d::Ellipsoid::Moon:
+            return 1736000.0;
+        case cppmap3d::Ellipsoid::Mars:
+            return 3376097.80585952;
+        case cppmap3d::Ellipsoid::Jupyter:
+            return 66770054.3475922;
+        case cppmap3d::Ellipsoid::Io:
+            return 1815.8;
+        case cppmap3d::Ellipsoid::Saturn:
+            return 54364301.5271271;
+        case cppmap3d::Ellipsoid::Uranus:
+            return 24973000.0;
+        case cppmap3d::Ellipsoid::Neptune:
+            return 24341000.0;
+        case cppmap3d::Ellipsoid::Pluto:
+            return 1188000.0;
+        default:
+            return getMinor(cppmap3d::Ellipsoid::WGS84);
+    }
+}
+
+inline constexpr double getFlattening(Ellipsoid ellipsoid) {
     double major = getMajor(ellipsoid);
-    double flattening = getFlattening(ellipsoid);
-    return major * (1.0 - flattening);
+    double minor = getMinor(ellipsoid);
+    return (major - minor) / major;
 }
 
 inline constexpr double getSquaredEccentricity(Ellipsoid ellipsoid) {
@@ -203,6 +317,8 @@ inline void ecef2geodetic_olson(
     double& out_alt,
     Ellipsoid ellipsoid = Ellipsoid::WGS84
 ) {
+    // Implementation from
+    // https://github.com/planet36/ecef-geodetic/blob/main/olson_1996/olson_1996.c
     double zp, w2, w, z2, r2, r, s2, c2, s, c, ss;
     double g, rg, rf, u, v, m, f, p;
     double a = internal::getMajor(ellipsoid);
@@ -254,8 +370,9 @@ inline void ecef2geodetic_olson(
     p = m / (rf / g + f);
     out_lat = out_lat + p;
     out_alt = f + m * p / 2.;
-    if (z < 0.)
+    if (z < 0.) {
         out_lat = -out_lat;
+    }
 }
 
 }  // namespace internal
@@ -326,9 +443,9 @@ inline void enu2aer(
 
     out_range = std::hypot(r, up);
     out_el = std::atan2(up, r);
-    const auto pi = (2 * 3.14159265358979311599796346854);
+    const auto pi2 = (2 * 3.14159265358979311599796346854);
 
-    out_az = std::fmod(pi + std::fmod(std::atan2(east, north), pi), pi);
+    out_az = std::fmod(pi2 + std::fmod(std::atan2(east, north), pi2), pi2);
 }
 
 inline void aer2ned(
@@ -352,12 +469,16 @@ inline void geodetic2ecef(
     double& out_z,
     Ellipsoid ellipsoid = Ellipsoid::WGS84
 ) {
+    const double pi = 3.14159265358979311599796346854;
+    if (std::abs(lat) > pi / 2) {
+        throw std::domain_error("-pi/2 <= latitude <= pi/2");
+    }
+
     double major = internal::getMajor(ellipsoid);
-    double flattening = internal::getFlattening(ellipsoid);
     double minor = internal::getMinor(ellipsoid);
     double se = internal::getSquaredEccentricity(ellipsoid);
 
-    double n = major / (std::sqrt(1.0 - se * std::sin(lat) * std::sin(lat)));
+    double n = major / std::sqrt(((1.0 - se * std::sin(lat) * std::sin(lat))));
 
     out_x = (n + alt) * std::cos(lat) * std::cos(lon);
     out_y = (n + alt) * std::cos(lat) * std::sin(lon);

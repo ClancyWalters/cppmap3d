@@ -451,18 +451,12 @@ TEST_CASE("ellipsoid_references") {
     CHECK(b == doctest::Approx(a * (1.0 - f)));
     CHECK(e == doctest::Approx(f * (2.0 - f)));
 
-    ellipsoid = cppmap3d::Ellipsoid::WGS60;
-    a = cppmap3d::internal::getMajor(ellipsoid);
-    f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(ellipsoid);
-    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
-
     CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
     CHECK((e - (f * (2.0 - f))) < 1E-6);
     CHECK(b == doctest::Approx(a * (1.0 - f)));
     CHECK(e == doctest::Approx(f * (2.0 - f)));
 
-    ellipsoid = cppmap3d::Ellipsoid::PZ90;
+    ellipsoid = cppmap3d::Ellipsoid::PZ9011;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(ellipsoid);
@@ -492,21 +486,6 @@ TEST_CASE("ellipsoid_references") {
     CHECK(1.0 / f == doctest::Approx(298.257222101));
     CHECK(e == doctest::Approx(f * (2.0 - f)));
 
-    ellipsoid = cppmap3d::Ellipsoid::BDC;
-    a = cppmap3d::internal::getMajor(ellipsoid);
-    f = cppmap3d::internal::getFlattening(ellipsoid);
-    b = cppmap3d::internal::getMinor(ellipsoid);
-    e = cppmap3d::internal::getSquaredEccentricity(ellipsoid);
-
-    CHECK(std::abs(a - 6378137.0) < 1E-6);
-    CHECK(std::abs(b - a * (1.0 - f)) < 1E-6);
-    CHECK(std::abs(1.0 / f - 298.257222101) < 1E-6);
-    CHECK((e - (f * (2.0 - f))) < 1E-6);
-    CHECK(a == doctest::Approx(6378137.0));
-    CHECK(b == doctest::Approx(a * (1.0 - f)));
-    CHECK(1.0 / f == doctest::Approx(298.257222101));
-    CHECK(e == doctest::Approx(f * (2.0 - f)));
-
     ellipsoid = cppmap3d::Ellipsoid::Bessel;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
@@ -518,7 +497,7 @@ TEST_CASE("ellipsoid_references") {
     CHECK(b == doctest::Approx(a * (1.0 - f)));
     CHECK(e == doctest::Approx(f * (2.0 - f)));
 
-    ellipsoid = cppmap3d::Ellipsoid::International;
+    ellipsoid = cppmap3d::Ellipsoid::International1967;
     a = cppmap3d::internal::getMajor(ellipsoid);
     f = cppmap3d::internal::getFlattening(ellipsoid);
     b = cppmap3d::internal::getMinor(ellipsoid);

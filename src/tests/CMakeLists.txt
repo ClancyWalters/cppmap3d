@@ -8,6 +8,8 @@ add_executable( cppmap3d_tests "main.cpp"
     "cppmap3d_aer.cpp"
     "cppmap3d_enu.cpp"
     "cppmap3d_geodetic.cpp"
+    "cppmap3d_ellipsoid.cpp"
+    "cppmap3d_ned.cpp"
 )
 
 target_link_libraries(

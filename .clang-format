@@ -59,4 +59,4 @@ AllowAllArgumentsOnNextLine : false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowAllConstructorInitializersOnNextLine: false
 
-AlignArrayOfStructures: Right
+AlignArrayOfStructures: Left
