@@ -78,17 +78,14 @@ TEST_CASE("ecef2geodetic_olson") {
         {{A - 1, 0, 0}, {0, 0, -1}},
         {{A + 1, 0, 0}, {0, 0, 1}},
         {{0.1 * A, 0, 0}, {0, 0, -0.9 * A}},
-        //{{0.001 * A, 0, 0}, {0, 0, -0.999 * A}}, test case fails sanity check for height above earth
         {{0, A, 0}, {0, 90, 0}},
         {{0, A - 1, 0}, {0, 90, -1}},
         {{0, A + 1, 0}, {0, 90, 1}},
         {{0, 0.1 * A, 0}, {0, 90, -0.9 * A}},
-        //{{0, 0.001 * A, 0}, {0, 90, -0.999 * A}}, test case fails sanity check for height above earth
         {{0, 0, B}, {90, 0, 0}},
         {{0, 0, B + 1}, {90, 0, 1}},
         {{0, 0, B - 1}, {90, 0, -1}},
         {{0, 0, 0.1 * B}, {90, 0, -0.9 * B}},
-        //{{0, 0, 0.001 * B}, {90, 0, -0.999 * B}}, test case fails sanity check for height above earth
         {{0, 0, B - 1}, {89.999999, 0, -1}},
         {{0, 0, B - 1}, {89.99999, 0, -1}},
         {{0, 0, -B + 1}, {-90, 0, -1}},
@@ -114,6 +111,35 @@ TEST_CASE("ecef2geodetic_olson") {
         CHECK(lat == doctest::Approx(radians(data[1][0])));
         CHECK(lon == doctest::Approx(radians(data[1][1])));
         CHECK(alt == doctest::Approx(data[1][2]));
+    }
+
+    // We check in olson that the input isn't too close to center of the earth
+    // so let's test that to ensure it works right, since some of the pymap3d
+    // tests, trigger it.
+
+    // clang-format off
+    std::vector<std::vector<std::vector<double>>> failure_container {
+        {{0.001 * A, 0, 0}, {0, 0, -0.999 * A}},
+        {{0, 0.001 * A, 0}, {0, 90, -0.999 * A}},
+        {{0, 0, 0.001 * B}, {90, 0, -0.999 * B}},
+    };
+    // clang-format on
+
+    for (const auto& data : failure_container) {
+        CAPTURE(data);
+
+        double lat, lon, alt;
+        CHECK_THROWS_AS(
+            cppmap3d::internal::ecef2geodetic_olson(
+                data[0][0],
+                data[0][1],
+                data[0][2],
+                lat,
+                lon,
+                alt
+            ),
+            std::domain_error
+        );
     }
 }
 
