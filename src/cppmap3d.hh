@@ -757,6 +757,23 @@ inline void ecef2ned(
     out_down = out_down * -1;
 }
 
+/**
+ * @brief Converts East, North, Up (ENU) coordinates to Earth-Centered,
+ * Earth-Fixed (ECEF) coordinates.
+ *
+ * @param east The East coordinate, in meters.
+ * @param north The North coordinate, in meters.
+ * @param up The Up coordinate, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param alt The altitude, in meters.
+ * @param[out] out_x The ECEF x-coordinate, in meters (output parameter).
+ * @param[out] out_y The ECEF y-coordinate, in meters (output parameter).
+ * @param[out] out_z The ECEF z-coordinate, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void enu2ecef(
     double east,
     double north,
@@ -778,8 +795,7 @@ inline void enu2ecef(
 }
 
 /**
- * @brief Converts East, North, Up (ENU) coordinates to Earth-Centered,
- * Earth-Fixed (ECEF) coordinates.
+ * @brief Converts East, North, Up (ENU) coordinates to geodetic coordinates.
  *
  * @param east The East coordinate, in meters.
  * @param north The North coordinate, in meters.
@@ -787,12 +803,9 @@ inline void enu2ecef(
  * @param lat The latitude, in radians.
  * @param lon The longitude, in radians.
  * @param alt The altitude, in meters.
- * @param[out] out_x The ECEF x-coordinate, in meters (output
- * parameter).
- * @param[out] out_y The ECEF y-coordinate, in meters (output
- * parameter).
- * @param[out] out_z The ECEF z-coordinate, in meters (output
- * parameter).
+ * @param[out] out_lat The latitude, in radians (output parameter).
+ * @param[out] out_lon The longitude, in radians (output parameter).
+ * @param[out] out_alt The altitude, in meters (output parameter).
  * @param ellipsoid The ellipsoid model used for the conversion (default is
  * WGS84).
  *
