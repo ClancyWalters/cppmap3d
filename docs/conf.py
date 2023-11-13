@@ -17,11 +17,11 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 breathe_projects = {}
 
 if read_the_docs_build:
-    input_dir = '../CatCutifier'
+    input_dir = '../src'
     output_dir = 'build'
     configureDoxyfile(input_dir, output_dir)
     subprocess.call('doxygen', shell=True)
-    breathe_projects['CatCutifier'] = output_dir + '/xml'
+    breathe_projects['cppmap3d'] = output_dir + '/xml'
 
 
 # Configuration file for the Sphinx documentation builder.
