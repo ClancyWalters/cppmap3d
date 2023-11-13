@@ -5,6 +5,8 @@ Header only single file C++ Implementation of pymap3d. API is similar to the $10
 ```C++
 #include "cppmap3d.hh"
 
+double x = ..., y = ..., z = ...;
+
 double x, y, z;
 cppmap3d::geodetic2ecef(lat, lon, alt, x, y, z);
 
@@ -18,6 +20,7 @@ If speed is important the library includes an alternative ecef2geodetic implemen
 #define CPPMAP3D_ECEF2GEODETIC_OLSON
 #include "cppmap3d.hh"
 
+double x = ..., y = ..., z = ...;
 double lat, lon, alt;
 cppmap3d::ecef2geodetic(x, y, z, lat, lon, alt);
 ```

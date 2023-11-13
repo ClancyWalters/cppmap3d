@@ -10,8 +10,6 @@ Welcome to cppmap3d's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
-
 Indices and tables
 ==================
 
@@ -23,5 +21,3 @@ Docs
 ====
 
 .. doxygenfile:: cppmap3d.hh
-   :project: nutshell
-   :namespace: cppmap3d

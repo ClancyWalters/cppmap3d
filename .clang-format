@@ -60,3 +60,5 @@ AllowAllParametersOfDeclarationOnNextLine: false
 AllowAllConstructorInitializersOnNextLine: false
 
 AlignArrayOfStructures: Left
+
+CommentPragmas: '@(ref|p|copydoc|note) '

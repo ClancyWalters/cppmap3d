@@ -4,7 +4,7 @@ find_package( Sphinx REQUIRED )
 # Find all the public headers
 add_custom_target( cppmap3d_header_target SOURCES ${CMAKE_SOURCE_DIR}/src/cppmap3d.hh )
 set( CPPMAP3D_PUBLIC_HEADER_DIR ${CMAKE_SOURCE_DIR}/src )
-file( GLOB CPPMAP3D_PUBLIC_HEADERS ${CPPMAP3D_PUBLIC_HEADER_DIR}/*.h )
+file( GLOB CPPMAP3D_PUBLIC_HEADERS ${CPPMAP3D_PUBLIC_HEADER_DIR}/*.hh )
 
 set( DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/src )
 set( DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/doxygen )

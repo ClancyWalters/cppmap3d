@@ -10,8 +10,11 @@
 namespace cppmap3d {
 
 /**
- * Ellipsoids used to approximate the shape of the earth.
- * Default is WGS84
+ * @brief Ellipsoids used to approximate the shape of the earth.
+ *
+ * @see
+ * [pymap3d ellipsoid
+ * source](https://github.com/geospace-code/pymap3d/blob/main/src/pymap3d/ellipsoid.py)
  */
 enum class Ellipsoid {
     Maupertuis,
@@ -54,6 +57,14 @@ enum class Ellipsoid {
 };
 
 namespace internal {
+/**
+ * @brief Returns the semi-major axis length of the specified ellipsoid.
+ * @param ellipsoid The ellipsoid for which the semi-major axis length is
+ * requested.
+ * @return The semi-major axis length of the specified ellipsoid in meters.
+ * @note The semi-major axis represents half of the longest diameter of the
+ * ellipsoid.
+ */
 inline constexpr double getMajor(Ellipsoid ellipsoid) {
     switch (ellipsoid) {
         case cppmap3d::Ellipsoid::Maupertuis:
@@ -135,6 +146,14 @@ inline constexpr double getMajor(Ellipsoid ellipsoid) {
     }
 }
 
+/**
+ * @brief Returns the semi-minor axis length of the specified ellipsoid.
+ * @param ellipsoid The ellipsoid for which the semi-minor axis length is
+ * requested.
+ * @return The semi-minor axis length of the specified ellipsoid in meters.
+ * @note The semi-minor axis represents half of the shortest diameter of the
+ * ellipsoid.
+ */
 inline constexpr double getMinor(Ellipsoid ellipsoid) {
     switch (ellipsoid) {
         case cppmap3d::Ellipsoid::Maupertuis:
@@ -216,18 +235,38 @@ inline constexpr double getMinor(Ellipsoid ellipsoid) {
     }
 }
 
+/**
+ * @brief Returns the flattening factor of the specified ellipsoid.
+ * @param ellipsoid The ellipsoid for which the flattening factor is requested.
+ * @return The flattening factor, a dimensionless quantity representing the
+ * ellipsoid's deviation from a perfect sphere.
+ * @note Flattening is calculated as (a - b) / a, where 'a' is the semi-major
+ * axis and 'b' is the semi-minor axis.
+ */
 inline constexpr double getFlattening(Ellipsoid ellipsoid) {
     double major = getMajor(ellipsoid);
     double minor = getMinor(ellipsoid);
     return (major - minor) / major;
 }
 
+/**
+ * @brief Returns the squared eccentricity of the specified ellipsoid.
+ * @param ellipsoid The ellipsoid for which the squared eccentricity is
+ * requested.
+ * @return The squared eccentricity, a dimensionless quantity expressing the
+ * ellipsoid's deviation from a perfect sphere.
+ * @note Squared eccentricity is calculated as (a^2 - b^2) / a^2, where 'a' is
+ * the semi-major axis and 'b' is the semi-minor axis.
+ */
 inline constexpr double getSquaredEccentricity(Ellipsoid ellipsoid) {
     double major = getMajor(ellipsoid);
     double minor = getMinor(ellipsoid);
     return ((major * major) - (minor * minor)) / (major * major);
 }
 
+/**
+ * @brief Internal function used in conversions certain coordinate conversions
+ */
 inline void enu2uvw(
     double et,
     double nt,
@@ -244,6 +283,9 @@ inline void enu2uvw(
     out_w = std::sin(lat) * up + std::cos(lat) * nt;
 }
 
+/**
+ * @brief Internal function used in conversions certain coordinate conversions
+ */
 inline void uvw2enu(
     double u,
     double v,
@@ -260,6 +302,27 @@ inline void uvw2enu(
     out_up = std::cos(lat) * t + std::sin(lat) * w;
 }
 
+/**
+ * @brief Converts Earth-Centered, Earth-Fixed (ECEF) coordinates to geodetic
+ * coordinates.
+ *
+ * @param x The ECEF x-coordinate, in meters.
+ * @param y The ECEF y-coordinate, in meters.
+ * @param z The ECEF z-coordinate, in meters.
+ * @param[out] out_lat The latitude, in radians (output parameter).
+ * @param[out] out_lon The longitude, in radians (output parameter).
+ * @param[out] out_alt The altitude, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ * @note This implementation is ported from pymap3d and is based on: You,
+ * Rey-Jer. (2000). Transformation of Cartesian to Geodetic Coordinates without
+ * Iterations. Journal of Surveying Engineering. doi: 10.1061/(ASCE)0733-9453.
+ *
+ * @note The latitude and longitude are returned in radians, and the altitude
+ * is provided in meters.
+ *
+ */
 inline void ecef2geodetic_you(
     double x,
     double y,
@@ -314,6 +377,26 @@ inline void ecef2geodetic_you(
     }
 }
 
+/**
+ * @brief Converts Earth-Centered, Earth-Fixed (ECEF) coordinates to geodetic
+ * coordinates using the Olson (1996) algorithm.
+ *
+ * @param x The ECEF x-coordinate, in meters.
+ * @param y The ECEF y-coordinate, in meters.
+ * @param z The ECEF z-coordinate, in meters.
+ * @param[out] out_lat The latitude, in radians (output parameter).
+ * @param[out] out_lon The longitude, in radians (output parameter).
+ * @param[out] out_alt The altitude, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ * @note This function implements the Olson (1996) algorithm, sourced from
+ * [this algorithm
+ * comparison](https://github.com/planet36/ecef-geodetic/blob/main/olson_1996/olson_1996.c)
+ *
+ * @throws std::domain_error if the ECEF coordinates are close to the center of
+ * the Earth.
+ */
 inline void ecef2geodetic_olson(
     double x,
     double y,
@@ -323,8 +406,6 @@ inline void ecef2geodetic_olson(
     double& out_alt,
     Ellipsoid ellipsoid = Ellipsoid::WGS84
 ) {
-    // Implementation from
-    // https://github.com/planet36/ecef-geodetic/blob/main/olson_1996/olson_1996.c
     double zp, w2, w, z2, r2, r, s2, c2, s, c, ss;
     double g, rg, rf, u, v, m, f, p;
     double a = internal::getMajor(ellipsoid);
@@ -383,6 +464,26 @@ inline void ecef2geodetic_olson(
 
 }  // namespace internal
 
+/**
+ * @brief Converts Earth-Centered, Earth-Fixed (ECEF) coordinates to geodetic
+ * coordinates.
+ *
+ * @param x The ECEF x-coordinate, in meters.
+ * @param y The ECEF y-coordinate, in meters.
+ * @param z The ECEF z-coordinate, in meters.
+ * @param[out] out_lat The latitude, in radians (output parameter).
+ * @param[out] out_lon The longitude, in radians (output parameter).
+ * @param[out] out_alt The altitude, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ * @note Defaults to pymap3d's algorithm from you (2000).
+ * Olson (1996) algorithm is selected at compile time by defining
+ * the 'CPPMAP3D_ECEF2GEODETIC_OLSON' macro.
+ *
+ * @throws std::domain_error if the ECEF coordinates are close to the center of
+ * the Earth and CPPMAP3D_ECEF2GEODETIC_OLSON is defined.
+ */
 inline void ecef2geodetic(
     double x,
     double y,
@@ -408,6 +509,19 @@ inline void ecef2geodetic(
 #endif
 }
 
+/**
+ * @brief Converts Azimuth, Elevation, and Range (AER) coordinates to East,
+ * North, Up (ENU) coordinates.
+ *
+ * @param az The ECEF azimuth angle, in radians.
+ * @param el The elevation angle, in radians.
+ * @param range The range distance, in meters.
+ * @param[out] out_e The East coordinate, in meters (output parameter).
+ * @param[out] out_n The North coordinate, in meters (output parameter).
+ * @param[out] out_u The Up coordinate, in meters (output parameter).
+ *
+ * @throws std::domain_error if range is negative
+ */
 inline void aer2enu(
     double az,
     double el,
@@ -426,6 +540,18 @@ inline void aer2enu(
     out_u = range * std::sin(el);
 }
 
+/**
+ * @brief Converts East, North, Up (ENU) coordinates to Azimuth, Elevation, and
+ * Range (AER) coordinates.
+ *
+ * @param east The East coordinate, in meters.
+ * @param north The North coordinate, in meters.
+ * @param up The Up coordinate, in meters.
+ * @param[out] out_az The ECEF azimuth angle, in radians (output parameter).
+ * @param[out] out_el The elevation angle, in radians (output parameter).
+ * @param[out] out_range The range distance, in meters (output parameter).
+ *
+ */
 inline void enu2aer(
     double east,
     double north,
@@ -454,6 +580,18 @@ inline void enu2aer(
     out_az = std::fmod(pi2 + std::fmod(std::atan2(east, north), pi2), pi2);
 }
 
+/**
+ * @brief Converts Azimuth, Elevation, and Range (AER) coordinates to North,
+ * East, Down (NED) coordinates.
+ *
+ * @param az The ECEF azimuth angle, in radians.
+ * @param el The elevation angle, in radians.
+ * @param range The range distance, in meters.
+ * @param[out] out_north The North coordinate, in meters (output parameter).
+ * @param[out] out_east The East coordinate, in meters (output parameter).
+ * @param[out] out_down The Down coordinate, in meters (output parameter).
+ *
+ */
 inline void aer2ned(
     double az,
     double el,
@@ -466,6 +604,24 @@ inline void aer2ned(
     out_down = out_down * -1;
 }
 
+/**
+ * @brief Converts geodetic coordinates to Earth-Centered, Earth-Fixed (ECEF)
+ * coordinates.
+ *
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param alt The altitude, in meters.
+ * @param[out] out_x The ECEF x-coordinate, in meters (output
+ * parameter).
+ * @param[out] out_y The ECEF y-coordinate, in meters (output
+ * parameter).
+ * @param[out] out_z The ECEF z-coordinate, in meters (output
+ * parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ * @throws std::domain_error if latitude is not within -pi/2 and pi/2 inclusive
+ */
 inline void geodetic2ecef(
     double lat,
     double lon,
@@ -491,6 +647,23 @@ inline void geodetic2ecef(
     out_z = (n * (minor / major) * (minor / major) + alt) * std::sin(lat);
 }
 
+/**
+ * @brief Converts Earth-Centered, Earth-Fixed (ECEF) coordinates to East,
+ * North, Up (ENU) coordinates.
+ *
+ * @param x The ECEF x-coordinate, in meters.
+ * @param y The ECEF y-coordinate, in meters.
+ * @param z The ECEF z-coordinate, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param alt The altitude, in meters.
+ * @param[out] out_east The East coordinate, in meters (output parameter).
+ * @param[out] out_north The North coordinate, in meters (output parameter).
+ * @param[out] out_up The Up coordinate, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void ecef2enu(
     double x,
     double y,
@@ -517,6 +690,23 @@ inline void ecef2enu(
     );
 }
 
+/**
+ * @brief Converts Earth-Centered, Earth-Fixed (ECEF) coordinates to Azimuth,
+ * Elevation, and Range (AER) coordinates.
+ *
+ * @param x The ECEF x-coordinate, in meters.
+ * @param y The ECEF y-coordinate, in meters.
+ * @param z The ECEF z-coordinate, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param alt The altitude, in meters.
+ * @param[out] out_az The ECEF azimuth angle, in radians (output parameter).
+ * @param[out] out_el The elevation angle, in radians (output parameter).
+ * @param[out] out_range The range distance, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void ecef2aer(
     double x,
     double y,
@@ -534,6 +724,23 @@ inline void ecef2aer(
     enu2aer(e, n, u, out_az, out_el, out_range);
 }
 
+/**
+ * @brief Converts Earth-Centered, Earth-Fixed (ECEF) coordinates to North,
+ * East, Down (NED) coordinates.
+ *
+ * @param x The ECEF x-coordinate, in meters.
+ * @param y The ECEF y-coordinate, in meters.
+ * @param z The ECEF z-coordinate, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param alt The altitude, in meters.
+ * @param[out] out_north The North coordinate, in meters (output parameter).
+ * @param[out] out_east The East coordinate, in meters (output parameter).
+ * @param[out] out_down The Down coordinate, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void ecef2ned(
     double x,
     double y,
@@ -570,6 +777,26 @@ inline void enu2ecef(
     out_z = out_z + z;
 }
 
+/**
+ * @brief Converts East, North, Up (ENU) coordinates to Earth-Centered,
+ * Earth-Fixed (ECEF) coordinates.
+ *
+ * @param east The East coordinate, in meters.
+ * @param north The North coordinate, in meters.
+ * @param up The Up coordinate, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param alt The altitude, in meters.
+ * @param[out] out_x The ECEF x-coordinate, in meters (output
+ * parameter).
+ * @param[out] out_y The ECEF y-coordinate, in meters (output
+ * parameter).
+ * @param[out] out_z The ECEF z-coordinate, in meters (output
+ * parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void enu2geodetic(
     double east,
     double north,
@@ -587,6 +814,23 @@ inline void enu2geodetic(
     ecef2geodetic(x, y, z, out_lat, out_lon, out_alt, ellipsoid);
 }
 
+/**
+ * @brief Converts geodetic coordinates to East, North, Up (ENU) coordinates
+ * relative to a reference point.
+ *
+ * @param lat The latitude in radians of the target.
+ * @param lon The longitude in radians of the target.
+ * @param alt The altitude in meters of the target.
+ * @param lat0 The latitude in radians of the observer.
+ * @param lon0 The longitude in radians of the observer.
+ * @param alt0 The altitude in meters of the observer.
+ * @param[out] out_east The East coordinate, in meters (output parameter).
+ * @param[out] out_north The North coordinate, in meters (output parameter).
+ * @param[out] out_up The Up coordinate, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void geodetic2enu(
     double lat,
     double lon,
@@ -617,6 +861,23 @@ inline void geodetic2enu(
     );
 }
 
+/**
+ * @brief Converts geodetic coordinates to Azimuth, Elevation, and Range (AER)
+ * coordinates relative to a reference point.
+ *
+ * @param lat The latitude in radians of the target.
+ * @param lon The longitude in radians of the target.
+ * @param alt The altitude in meters of the target.
+ * @param lat0 The latitude in radians of the observer.
+ * @param lon0 The longitude in radians of the observer.
+ * @param alt0 The altitude in meters of the observer.
+ * @param[out] out_az The ECEF azimuth angle, in radians (output parameter).
+ * @param[out] out_el The elevation angle, in radians (output parameter).
+ * @param[out] out_range The range distance, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void geodetic2aer(
     double lat,
     double lon,
@@ -634,6 +895,23 @@ inline void geodetic2aer(
     enu2aer(e, n, u, out_az, out_el, out_range);
 }
 
+/**
+ * @brief Converts geodetic coordinates to North, East, Down (NED) coordinates
+ * relative to a reference point.
+ *
+ * @param lat The latitude in radians of the target.
+ * @param lon The longitude in radians of the target.
+ * @param alt The altitude in meters of the target.
+ * @param lat0 The latitude in radians of the observer.
+ * @param lon0 The longitude in radians of the observer.
+ * @param alt0 The altitude in meters of the observer.
+ * @param[out] out_north The North coordinate, in meters (output parameter).
+ * @param[out] out_east The East coordinate, in meters (output parameter).
+ * @param[out] out_down The Down coordinate, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void geodetic2ned(
     double lat,
     double lon,
@@ -661,6 +939,26 @@ inline void geodetic2ned(
     out_down = out_down * -1;
 }
 
+/**
+ * @brief Converts Azimuth, Elevation, and Range (AER) coordinates to
+ * Earth-Centered, Earth-Fixed (ECEF) coordinates.
+ *
+ * @param az The ECEF azimuth angle, in radians.
+ * @param el The elevation angle, in radians.
+ * @param range The range distance, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param alt The altitude, in meters.
+ * @param[out] out_x The ECEF x-coordinate, in meters (output
+ * parameter).
+ * @param[out] out_y The ECEF y-coordinate, in meters (output
+ * parameter).
+ * @param[out] out_z The ECEF z-coordinate, in meters (output
+ * parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void aer2ecef(
     double az,
     double el,
@@ -684,6 +982,23 @@ inline void aer2ecef(
     out_z = z + dz;
 }
 
+/**
+ * @brief Converts Azimuth, Elevation, and Range (AER) coordinates to geodetic
+ * coordinates.
+ *
+ * @param az The ECEF azimuth angle, in radians.
+ * @param el The elevation angle, in radians.
+ * @param range The range distance, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param alt The altitude, in meters.
+ * @param[out] out_lat The latitude, in radians (output parameter).
+ * @param[out] out_lon The longitude, in radians (output parameter).
+ * @param[out] out_alt The altitude, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void aer2geodetic(
     double az,
     double el,
@@ -701,6 +1016,23 @@ inline void aer2geodetic(
     ecef2geodetic(x, y, z, out_lat, out_lon, out_alt, ellipsoid);
 }
 
+/**
+ * @brief Converts North, East, Down (NED) coordinates to Earth-Centered,
+ * Earth-Fixed (ECEF) coordinates.
+ *
+ * @param north The North coordinate, in meters.
+ * @param east The East coordinate, in meters.
+ * @param down The Down coordinate, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param alt The altitude, in meters.
+ * @param[out] out_x The ECEF x-coordinate, in meters (output parameter).
+ * @param[out] out_y The ECEF y-coordinate, in meters (output parameter).
+ * @param[out] out_z The ECEF z-coordinate, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void ned2ecef(
     double north,
     double east,
@@ -727,6 +1059,22 @@ inline void ned2ecef(
     );
 }
 
+/**
+ * @brief Converts North, East, Down (NED) coordinates to geodetic coordinates.
+ *
+ * @param north The North coordinate, in meters.
+ * @param east The East coordinate, in meters.
+ * @param down The Down coordinate, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param alt The altitude, in meters.
+ * @param[out] out_lat The latitude, in radians (output parameter).
+ * @param[out] out_lon The longitude, in radians (output parameter).
+ * @param[out] out_alt The altitude, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
 inline void ned2geodetic(
     double north,
     double east,
@@ -753,6 +1101,18 @@ inline void ned2geodetic(
     );
 }
 
+/**
+ * @brief Converts North, East, Down (NED) coordinates to Azimuth, Elevation,
+ * and Range (AER) coordinates.
+ *
+ * @param north The North coordinate, in meters.
+ * @param east The East coordinate, in meters.
+ * @param down The Down coordinate, in meters.
+ * @param[out] out_az The azimuth angle, in radians (output parameter).
+ * @param[out] out_el The elevation angle, in radians (output parameter).
+ * @param[out] out_range The range distance, in meters (output parameter).
+ *
+ */
 inline void ned2aer(
     double north,
     double east,
