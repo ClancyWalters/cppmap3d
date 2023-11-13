@@ -1,6 +1,8 @@
 # cppmap3d
 Header only single file C++ Implementation of pymap3d. API is similar to the $1000 Matlab Mapping toolbox.
 
+[Docs](https://cppmap3d.readthedocs.io/en/stable/)
+
 ## Usage
 ```C++
 #include "cppmap3d.hh"
