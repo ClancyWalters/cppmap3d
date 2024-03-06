@@ -1,4 +1,12 @@
-find_package( doctest REQUIRED )
+include(FetchContent)
+
+FetchContent_Declare(
+    doctest
+    GIT_REPOSITORY https://github.com/doctest/doctest
+    GIT_TAG v2.4.11
+)
+FetchContent_MakeAvailable(doctest)
+
 enable_testing()
 
 add_executable( cppmap3d_tests "main.cpp"
@@ -20,5 +28,5 @@ target_link_libraries(
     doctest::doctest
 )
 
-include( doctest )
+include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
 doctest_discover_tests( cppmap3d_tests WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
