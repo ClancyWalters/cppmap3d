@@ -31,6 +31,17 @@ cppmap3d::ecef2geodetic(x, y, z, lat, lon, alt);
 
 Copy `cppmap3d.hh` into your project files.
 
+To install with cmake `FetchContent`:
+
+```cmake
+FetchContent_Declare(
+    cppmap3d
+    GIT_REPOSITORY https://github.com/ClancyWalters/cppmap3d
+    GIT_TAG 1.1.0
+)
+FetchContent_MakeAvailable(cppmap3d)
+```
+
 ## Prerequisites
 
 Tests run at C++11, use at own risk for older compiler versions.
