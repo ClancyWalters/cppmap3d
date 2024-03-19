@@ -1136,6 +1136,54 @@ inline void ned2aer(
 ) {
     enu2aer(east, north, -1 * down, out_az, out_el, out_range);
 }
+
+/*
+ * @brief  Normalize co-ordinates that lie outside of the normal ranges.
+ * 
+ * Longitude wrapping simply requires adding +- 360 to the value until it comes
+ * into range.
+ * 
+ * For the latitude values, we need to flip the longitude whenever the latitude
+ * a pole.
+ * 
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param[out] out_lat The latitude, in radians (output parameter).
+ * @param[out] out_lon The longitude, in radians (output parameter).
+ * 
+ * Ported from https://github.com/pelias/api/blob/8f6596db27ef74a451e4307f81a0ff7e7870ac03/sanitizer/wrap.js#L10 (MIT licence)
+ */
+
+inline void wrapGeodetic(double lat, double lon, double& out_lat, double& out_lon) {
+
+    int quadrant = static_cast<int>(floor(abs(lat) / 90.0)) % 4;
+    double pole = (lat > 0) ? 90 : -90;
+    double offset = fmod(lat, 90);
+
+    switch (quadrant) { 
+        case 0:
+            out_lat = offset;
+            out_lon = lon;
+            break;
+        case 1:
+            out_lat = pole - offset;
+            out_lon = lon;
+            break;
+        case 2:
+            out_lat = -offset;
+            out_lon = lon + 180;
+            break;
+        case 3:
+            out_lat = -pole + offset;
+            out_lon = lon;
+            break;
+    }
+
+    if (out_lon > 180 || out_lon < 180) {
+        out_lon -= floor((lon + 180) / 360) * 360;
+    }
+}
+
 }  // namespace cppmap3d
 
 #endif
