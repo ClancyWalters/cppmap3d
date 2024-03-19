@@ -541,3 +541,120 @@ TEST_CASE("ecef2ned") {
     CHECK(n == doctest::Approx(nref));
     CHECK(d == doctest::Approx(dref));
 }
+
+TEST_CASE("wrapGeodetic") {
+    
+    // Control
+    double lat, lon;
+    cppmap3d::wrapGeodetic(radians(55.555), radians(22.222), lat, lon);
+    CHECK(lat == doctest::Approx(radians(55.555)));
+    CHECK(lon == doctest::Approx(radians(22.222)));
+
+    // Positive latitude
+    cppmap3d::wrapGeodetic(radians(1), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(1)));
+    CHECK(lon == doctest::Approx(radians(0)));
+
+    cppmap3d::wrapGeodetic(radians(91), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(89)));
+    CHECK(lon == doctest::Approx(radians(180)));
+
+    cppmap3d::wrapGeodetic(radians(181), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(-1)));
+    CHECK(lon == doctest::Approx(radians(180)));
+
+    cppmap3d::wrapGeodetic(radians(271), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(-89)));
+    CHECK(lon == doctest::Approx(radians(0)));
+
+    cppmap3d::wrapGeodetic(radians(361), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(1)));
+    CHECK(lon == doctest::Approx(radians(0)));
+
+    cppmap3d::wrapGeodetic(radians(631), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(-89)));
+    CHECK(lon == doctest::Approx(radians(0)));
+
+    cppmap3d::wrapGeodetic(radians(721), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(1)));
+    CHECK(lon == doctest::Approx(radians(0)));
+
+    // Negative Latitude
+    cppmap3d::wrapGeodetic(radians(-1), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(-1)));
+    CHECK(lon == doctest::Approx(radians(0)));
+
+    cppmap3d::wrapGeodetic(radians(-91), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(-89)));
+    CHECK(lon == doctest::Approx(radians(180)));
+
+    cppmap3d::wrapGeodetic(radians(-181), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(1)));
+    CHECK(lon == doctest::Approx(radians(180)));
+
+    cppmap3d::wrapGeodetic(radians(-271), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(89)));
+    CHECK(lon == doctest::Approx(radians(0)));
+
+    cppmap3d::wrapGeodetic(radians(-361), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(-1)));
+    CHECK(lon == doctest::Approx(radians(0)));
+
+    cppmap3d::wrapGeodetic(radians(-631), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(89)));
+    CHECK(lon == doctest::Approx(radians(0)));
+
+    cppmap3d::wrapGeodetic(radians(-721), radians(0), lat, lon);
+    CHECK(lat == doctest::Approx(radians(-1)));
+    CHECK(lon == doctest::Approx(radians(0)));
+
+    // Positive Longitude
+    cppmap3d::wrapGeodetic(radians(0), radians(1), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(1)));
+
+    cppmap3d::wrapGeodetic(radians(0), radians(181), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(-179)));
+
+    cppmap3d::wrapGeodetic(radians(0), radians(271), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(-89)));
+
+    cppmap3d::wrapGeodetic(radians(0), radians(361), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(1)));
+
+    cppmap3d::wrapGeodetic(radians(0), radians(631), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(-89)));
+
+    cppmap3d::wrapGeodetic(radians(0), radians(721), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(1)));
+
+    // Negative Longitude
+    cppmap3d::wrapGeodetic(radians(0), radians(-1), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(-1)));
+
+    cppmap3d::wrapGeodetic(radians(0), radians(-181), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(179)));
+
+    cppmap3d::wrapGeodetic(radians(0), radians(-271), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(89)));
+
+    cppmap3d::wrapGeodetic(radians(0), radians(-361), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(-1)));
+
+    cppmap3d::wrapGeodetic(radians(0), radians(-631), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(89)));
+
+    cppmap3d::wrapGeodetic(radians(0), radians(-721), lat, lon);
+    CHECK(lat == doctest::Approx(radians(0)));
+    CHECK(lon == doctest::Approx(radians(-1)));
+}

@@ -1156,9 +1156,10 @@ inline void ned2aer(
 
 inline void wrapGeodetic(double lat, double lon, double& out_lat, double& out_lon) {
 
-    int quadrant = static_cast<int>(floor(abs(lat) / 90.0)) % 4;
-    double pole = (lat > 0) ? 90 : -90;
-    double offset = fmod(lat, 90);
+    const double pi = 3.14159265358979311599796346854;
+    int quadrant = static_cast<int>(floor(abs(lat) / (pi/2))) % 4;
+    double pole = (lat > 0) ? (pi / 2) : -(pi / 2);
+    double offset = std::fmod(lat, (pi / 2));
 
     switch (quadrant) { 
         case 0:
@@ -1167,11 +1168,11 @@ inline void wrapGeodetic(double lat, double lon, double& out_lat, double& out_lo
             break;
         case 1:
             out_lat = pole - offset;
-            out_lon = lon;
+            out_lon = lon + pi;
             break;
         case 2:
             out_lat = -offset;
-            out_lon = lon + 180;
+            out_lon = lon + pi;
             break;
         case 3:
             out_lat = -pole + offset;
@@ -1179,8 +1180,8 @@ inline void wrapGeodetic(double lat, double lon, double& out_lat, double& out_lo
             break;
     }
 
-    if (out_lon > 180 || out_lon < 180) {
-        out_lon -= floor((lon + 180) / 360) * 360;
+    if (out_lon > pi || out_lon < pi) {
+        out_lon -= floor((out_lon + pi) / (pi * 2)) * (pi * 2);
     }
 }
 
