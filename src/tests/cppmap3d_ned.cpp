@@ -115,3 +115,35 @@ TEST_CASE("ned_geodetic") {
     CHECK(lon == doctest::Approx(lon1));
     CHECK(alt == doctest::Approx(alt1));
 }
+
+TEST_CASE("enuv_nedv") {
+    double vx = 5; 
+    double vy = 3;
+    double vz = 2;
+    double ve = 5.368859646588048;
+    double vn = 3.008520763668120;
+    double vu = -0.352347711524077;
+
+    double e, n, u;
+    cppmap3d::ecef2enuv(vx, vy, vz, lla[0], lla[1], e, n, u);
+
+    CHECK(ve == doctest::Approx(e));
+    CHECK(vn == doctest::Approx(n));
+    CHECK(vu == doctest::Approx(u));
+
+    double x, y, z;
+    cppmap3d::enu2ecefv(ve, vn, vu, lla[0], lla[1], x, y, z);
+
+    CHECK(vx == doctest::Approx(x));
+    CHECK(vy == doctest::Approx(y));
+    CHECK(vz == doctest::Approx(z));
+
+    n = 0;
+    e = 0;
+    double d;
+    cppmap3d::ecef2nedv(vx, vy, vz, lla[0], lla[1], n, e, d);
+
+    CHECK(vn == doctest::Approx(n));
+    CHECK(ve == doctest::Approx(e));
+    CHECK(-vu == doctest::Approx(d));
+}

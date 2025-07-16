@@ -1137,6 +1137,98 @@ inline void ned2aer(
     enu2aer(east, north, -1 * down, out_az, out_el, out_range);
 }
 
+/**
+ * @brief Converts Earth-Centered, Earth-Fixed (ECEF) VECTOR to East,
+ * North, Up (ENU) VECTOR.
+ *
+ * @param x The ECEF x-vector, in meters.
+ * @param y The ECEF y-vector, in meters.
+ * @param z The ECEF z-vector, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param[out] out_east The East vector, in meters (output parameter).
+ * @param[out] out_north The North vector, in meters (output parameter).
+ * @param[out] out_up The Up vector, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ *
+ */
+inline void ecef2enuv(
+    double u,
+    double v,
+    double w,
+    double lat0,
+    double lon0,
+    double& out_east,
+    double& out_north,
+    double& out_up
+) {
+    double t = std::cos(lon0) * u + std::sin(lon0) * v;
+    out_east = -std::sin(lon0) * u + std::cos(lon0) * v;
+    out_up = std::cos(lat0) * t + std::sin(lat0) * w;
+    out_north = -std::sin(lat0) * t + std::cos(lat0) * w;
+}
+
+/**
+ * @brief Converts Earth-Centered, Earth-Fixed (ECEF) VECTOR to North,
+ * East, Down (NED) VECTOR.
+ *
+ * @param x The ECEF x-vector, in meters.
+ * @param y The ECEF y-vector, in meters.
+ * @param z The ECEF z-vector, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param[out] out_north The North vector, in meters (output parameter).
+ * @param[out] out_east The East vector, in meters (output parameter).
+ * @param[out] out_down The Down vector, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ */
+inline void ecef2nedv(
+    double x, 
+    double y, 
+    double z, 
+    double lat0,
+    double lon0, 
+    double& out_north, 
+    double& out_east, 
+    double& out_down
+) {
+    double up;
+    ecef2enuv(x, y, z, lat0, lon0, out_east, out_north, up);
+    out_down = -up;
+}
+
+/**
+ * @brief Converts East, North, Up (ENU) VECTOR to Earth-Centered,
+ * Earth-Fixed (ECEF) VECTOR.
+ *
+ * @param east The East coordinate, in meters.
+ * @param north The North coordinate, in meters.
+ * @param up The Up coordinate, in meters.
+ * @param lat The latitude, in radians.
+ * @param lon The longitude, in radians.
+ * @param[out] out_x The ECEF x-vector, in meters (output parameter).
+ * @param[out] out_y The ECEF y-vector, in meters (output parameter).
+ * @param[out] out_z The ECEF z-vector, in meters (output parameter).
+ * @param ellipsoid The ellipsoid model used for the conversion (default is
+ * WGS84).
+ */
+inline void enu2ecefv(
+    double east, 
+    double north, 
+    double up,
+    double lat0,
+    double lon0,
+    double& out_x,
+    double& out_y,
+    double& out_z
+) {
+    out_x = -std::sin(lon0) * east - std::sin(lat0) * std::cos(lon0) * north + std::cos(lat0) * std::cos(lon0) * up;
+    out_y = std::cos(lon0) * east - std::sin(lat0) * std::sin(lon0) * north + std::cos(lat0) * std::sin(lon0) * up;
+    out_z = std::cos(lat0) * north + std::sin(lat0) * up;
+}
+
 /*
  * @brief  Normalize co-ordinates that lie outside of the normal ranges.
  * 
