@@ -41,9 +41,9 @@ TEST_CASE("ecef_ned") {
         z1
     );
 
-    CHECK(x == doctest::Approx(x));
-    CHECK(y == doctest::Approx(y));
-    CHECK(z == doctest::Approx(z));
+    CHECK(x == doctest::Approx(x1));
+    CHECK(y == doctest::Approx(y1));
+    CHECK(z == doctest::Approx(z1));
 }
 
 TEST_CASE("ned_geodetic") {
