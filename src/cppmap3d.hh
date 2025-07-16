@@ -513,7 +513,7 @@ inline void ecef2geodetic(
  * @brief Converts Azimuth, Elevation, and Range (AER) coordinates to East,
  * North, Up (ENU) coordinates.
  *
- * @param az The ECEF azimuth angle, in radians.
+ * @param az The azimuth angle, in radians.
  * @param el The elevation angle, in radians.
  * @param range The range distance, in meters.
  * @param[out] out_e The East coordinate, in meters (output parameter).
@@ -547,7 +547,7 @@ inline void aer2enu(
  * @param east The East coordinate, in meters.
  * @param north The North coordinate, in meters.
  * @param up The Up coordinate, in meters.
- * @param[out] out_az The ECEF azimuth angle, in radians (output parameter).
+ * @param[out] out_az The azimuth angle, in radians (output parameter).
  * @param[out] out_el The elevation angle, in radians (output parameter).
  * @param[out] out_range The range distance, in meters (output parameter).
  *
@@ -584,7 +584,7 @@ inline void enu2aer(
  * @brief Converts Azimuth, Elevation, and Range (AER) coordinates to North,
  * East, Down (NED) coordinates.
  *
- * @param az The ECEF azimuth angle, in radians.
+ * @param az The azimuth angle, in radians.
  * @param el The elevation angle, in radians.
  * @param range The range distance, in meters.
  * @param[out] out_north The North coordinate, in meters (output parameter).
@@ -700,7 +700,7 @@ inline void ecef2enu(
  * @param lat The latitude, in radians.
  * @param lon The longitude, in radians.
  * @param alt The altitude, in meters.
- * @param[out] out_az The ECEF azimuth angle, in radians (output parameter).
+ * @param[out] out_az The azimuth angle, in radians (output parameter).
  * @param[out] out_el The elevation angle, in radians (output parameter).
  * @param[out] out_range The range distance, in meters (output parameter).
  * @param ellipsoid The ellipsoid model used for the conversion (default is
@@ -884,7 +884,7 @@ inline void geodetic2enu(
  * @param lat0 The latitude in radians of the observer.
  * @param lon0 The longitude in radians of the observer.
  * @param alt0 The altitude in meters of the observer.
- * @param[out] out_az The ECEF azimuth angle, in radians (output parameter).
+ * @param[out] out_az The azimuth angle, in radians (output parameter).
  * @param[out] out_el The elevation angle, in radians (output parameter).
  * @param[out] out_range The range distance, in meters (output parameter).
  * @param ellipsoid The ellipsoid model used for the conversion (default is
@@ -956,7 +956,7 @@ inline void geodetic2ned(
  * @brief Converts Azimuth, Elevation, and Range (AER) coordinates to
  * Earth-Centered, Earth-Fixed (ECEF) coordinates.
  *
- * @param az The ECEF azimuth angle, in radians.
+ * @param az The azimuth angle, in radians.
  * @param el The elevation angle, in radians.
  * @param range The range distance, in meters.
  * @param lat The latitude, in radians.
@@ -999,7 +999,7 @@ inline void aer2ecef(
  * @brief Converts Azimuth, Elevation, and Range (AER) coordinates to geodetic
  * coordinates.
  *
- * @param az The ECEF azimuth angle, in radians.
+ * @param az The azimuth angle, in radians.
  * @param el The elevation angle, in radians.
  * @param range The range distance, in meters.
  * @param lat The latitude, in radians.
